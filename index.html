@@ -1,0 +1,938 @@
+<title>数值分析互动学习中心</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+  svg: { fontCache: 'global' },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] },
+  chtml: { scale: 0.95 }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+
+<div class="page">
+
+  <!-- ================= HERO ================= -->
+  <header class="hero" id="top">
+    <div class="kicker">Numerical Analysis · Interactive Companion</div>
+    <h1>数值分析互动学习中心</h1>
+    <p class="sub">把 11 章讲义、公式速查表、图解手册与模拟卷整合成一页：课程地图看清章节依赖，思维导图展开每章结构，14 个互动实验让你拖动参数<b>亲眼看</b>误差怎么爆炸、迭代怎么收敛、Runge 现象怎么发生，最后用考前锦囊（证明链条 + 标准动作 + 易错清单 + 自测题）收束。配套教材：郑慧娆等《数值计算方法》；深读时回到对应章节讲义。</p>
+    <div class="hero-stats">
+      <div class="stat"><b>11</b><span>章节全覆盖</span></div>
+      <div class="stat"><b>14</b><span>互动实验</span></div>
+      <div class="stat"><b>≈119h</b><span>建议自学学时</span></div>
+      <div class="stat"><b>10</b><span>概念自测题</span></div>
+      <div class="stat"><b>8 周</b><span>备考节奏</span></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="plabel"><span>学习进度（每章右上角打勾）</span><span id="pbar-label">0 / 11 章</span></div>
+      <div class="pbar"><i id="pbar-fill"></i></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- ================= SIDENAV ================= -->
+    <nav class="sidenav" aria-label="章节目录">
+      <div class="nav-title">导航</div>
+      <a href="#map" class="nav-sec">课程地图</a>
+      <a href="#plan" class="nav-sec">学习路线</a>
+      <a href="#ch1" id="nav-ch1"><span class="dot"></span>01 误差与浮点数</a>
+      <a href="#ch2" id="nav-ch2"><span class="dot"></span>02 范数与性态</a>
+      <a href="#ch3" id="nav-ch3"><span class="dot"></span>03 直接解法</a>
+      <a href="#ch4" id="nav-ch4"><span class="dot"></span>04 迭代法</a>
+      <a href="#ch5" id="nav-ch5"><span class="dot"></span>05 非线性方程</a>
+      <a href="#ch6" id="nav-ch6"><span class="dot"></span>06 最小二乘</a>
+      <a href="#ch7" id="nav-ch7"><span class="dot"></span>07 特征值计算</a>
+      <a href="#ch8" id="nav-ch8"><span class="dot"></span>08 插值法</a>
+      <a href="#ch9" id="nav-ch9"><span class="dot"></span>09 函数逼近</a>
+      <a href="#ch10" id="nav-ch10"><span class="dot"></span>10 数值积分微分</a>
+      <a href="#ch11" id="nav-ch11"><span class="dot"></span>11 常微分方程</a>
+      <a href="#formulas" class="nav-sec">公式速查</a>
+      <a href="#exam" class="nav-sec">考前锦囊</a>
+      <a href="#quiz" class="nav-sec">概念自测</a>
+    </nav>
+
+    <main>
+      <!-- ================= 课程地图 ================= -->
+      <section id="map">
+        <div class="sec-head">
+          <div class="eyebrow">COURSE MAP</div>
+          <h2>课程地图：章节依赖与三条主线</h2>
+          <p>箭头 = 「前置 → 后续」。第 02 章是全局枢纽（向右连出 5 条边），第 08 章是第二枢纽 —— 这正是两章出题最密集的原因。点击下方按钮可分别高亮三条主线；点击任意章节节点可跳转到该章。</p>
+        </div>
+        <div class="depwrap">
+          <div class="dep-tools">
+            <button data-th="a">主线 A · 误差与稳定性（01→02→03→11）</button>
+            <button data-th="b">主线 B · 线性代数计算（02→03→04/06/07）</button>
+            <button data-th="c">主线 C · 函数逼近（08→09→10→11）</button>
+          </div>
+          <svg class="depsvg" id="depsvg" viewBox="0 0 1000 380" role="img" aria-label="章节依赖图：01、02 章为全局前置，08 章为逼近主线枢纽">
+            <defs>
+              <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+              </marker>
+            </defs>
+            <g style="color:var(--muted)">
+              <line class="edge" id="dep-e12" x1="140" y1="180" x2="196" y2="95" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e18" x1="140" y1="200" x2="196" y2="285" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e23" x1="320" y1="82" x2="374" y2="82" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e24" x1="315" y1="64" x2="554" y2="32" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e25" x1="320" y1="86" x2="554" y2="112" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e26" x1="320" y1="92" x2="554" y2="192" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e27" x1="320" y1="98" x2="554" y2="272" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e34" x1="500" y1="74" x2="554" y2="42" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e35" x1="500" y1="82" x2="554" y2="106" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e36" x1="500" y1="90" x2="554" y2="186" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e37" x1="500" y1="96" x2="554" y2="266" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e89" x1="320" y1="292" x2="694" y2="214" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e810" x1="320" y1="300" x2="844" y2="252" marker-end="url(#arw)"></line>
+              <path class="edge" id="dep-e811" d="M320 312 C 480 352, 700 352, 844 334" fill="none" marker-end="url(#arw)"></path>
+              <line class="edge" id="dep-e910" x1="820" y1="214" x2="846" y2="246" marker-end="url(#arw)"></line>
+              <line class="edge" id="dep-e1011" x1="910" y1="274" x2="910" y2="304" marker-end="url(#arw)"></line>
+            </g>
+            <g class="node" id="dep-c1" data-t="ch1"><rect x="20" y="168" width="120" height="44" rx="8"></rect><text x="80" y="186" text-anchor="middle" font-size="13" font-weight="700">01 误差</text><text x="80" y="202" text-anchor="middle" font-size="10.5">浮点数·稳定性</text></g>
+            <g class="node" id="dep-c2" data-t="ch2"><rect x="200" y="60" width="120" height="44" rx="8"></rect><text x="260" y="78" text-anchor="middle" font-size="13" font-weight="700">02 范数与条件数</text><text x="260" y="94" text-anchor="middle" font-size="10.5">全书枢纽·证明高发</text></g>
+            <g class="node" id="dep-c3" data-t="ch3"><rect x="380" y="60" width="120" height="44" rx="8"></rect><text x="440" y="78" text-anchor="middle" font-size="13" font-weight="700">03 直接解法</text><text x="440" y="94" text-anchor="middle" font-size="10.5">LU·Cholesky·追赶</text></g>
+            <g class="node" id="dep-c4" data-t="ch4"><rect x="560" y="10" width="120" height="44" rx="8"></rect><text x="620" y="28" text-anchor="middle" font-size="13" font-weight="700">04 迭代法</text><text x="620" y="44" text-anchor="middle" font-size="10.5">Jacobi·GS·SOR·CG</text></g>
+            <g class="node" id="dep-c5" data-t="ch5"><rect x="560" y="90" width="120" height="44" rx="8"></rect><text x="620" y="108" text-anchor="middle" font-size="13" font-weight="700">05 非线性方程</text><text x="620" y="124" text-anchor="middle" font-size="10.5">二分·Newton·弦截</text></g>
+            <g class="node" id="dep-c6" data-t="ch6"><rect x="560" y="170" width="120" height="44" rx="8"></rect><text x="620" y="188" text-anchor="middle" font-size="13" font-weight="700">06 最小二乘</text><text x="620" y="204" text-anchor="middle" font-size="10.5">法方程·QR·SVD</text></g>
+            <g class="node" id="dep-c7" data-t="ch7"><rect x="560" y="250" width="120" height="44" rx="8"></rect><text x="620" y="268" text-anchor="middle" font-size="13" font-weight="700">07 特征值</text><text x="620" y="284" text-anchor="middle" font-size="10.5">幂法·QR 方法</text></g>
+            <g class="node" id="dep-c8" data-t="ch8"><rect x="200" y="280" width="120" height="44" rx="8"></rect><text x="260" y="298" text-anchor="middle" font-size="13" font-weight="700">08 插值法</text><text x="260" y="314" text-anchor="middle" font-size="10.5">第二枢纽·计算最密</text></g>
+            <g class="node" id="dep-c9" data-t="ch9"><rect x="700" y="190" width="120" height="44" rx="8"></rect><text x="760" y="208" text-anchor="middle" font-size="13" font-weight="700">09 函数逼近</text><text x="760" y="224" text-anchor="middle" font-size="10.5">Chebyshev·正交</text></g>
+            <g class="node" id="dep-c10" data-t="ch10"><rect x="850" y="230" width="120" height="44" rx="8"></rect><text x="910" y="248" text-anchor="middle" font-size="13" font-weight="700">10 数值积分</text><text x="910" y="264" text-anchor="middle" font-size="10.5">N-C·Romberg·Gauss</text></g>
+            <g class="node" id="dep-c11" data-t="ch11"><rect x="850" y="310" width="120" height="44" rx="8"></rect><text x="910" y="328" text-anchor="middle" font-size="13" font-weight="700">11 常微分方程</text><text x="910" y="344" text-anchor="middle" font-size="10.5">Euler·RK·稳定性</text></g>
+          </svg>
+          <figcaption>灰色为依赖关系；点上方三个按钮分别高亮三条主线。注：11 章（右下）同时依赖 03（稳定性思想）与 08/10（逼近工具）。</figcaption>
+        </div>
+
+        <h3 style="margin-top:32px">全课程思维导图 <span style="font-size:13px;color:var(--muted);font-weight:400">（点击章节展开/收起，点击子条目跳转）</span></h3>
+        <div class="mindmap">
+          <div class="mm-tools">
+            <button id="mm-expand">全部展开</button>
+            <button id="mm-collapse">全部收起</button>
+          </div>
+          <div id="mindmap"></div>
+        </div>
+      </section>
+
+      <!-- ================= 学习路线 ================= -->
+      <section id="plan">
+        <div class="sec-head">
+          <div class="eyebrow">STUDY PLAN</div>
+          <h2>学习路线与考试权重</h2>
+          <p>假设距考试 8 周、每周投入 12–15 小时。第 01、02 章不许跳 —— 后面所有误差界、收敛判据、条件数都建立在这两章上。</p>
+        </div>
+
+        <div class="two-col">
+          <div>
+            <h3 style="font-size:16px">各章建议学时与考试权重</h3>
+            <div class="wbars" id="wbars"></div>
+            <div class="legend" style="margin-top:10px">
+              <span><i style="background:var(--s2)"></i>权重最高</span>
+              <span><i style="background:var(--s1)"></i>权重高</span>
+              <span><i style="background:var(--s3)"></i>中高</span>
+              <span><i style="background:var(--muted)"></i>中</span>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size:16px">每章四步学习法</h3>
+            <figure class="diagram">
+              <svg viewBox="0 0 460 170" role="img" aria-label="四步学习法：通读概念、手推例题、做章末习题、自测与回填，不达标回到手推例题">
+                <defs><marker id="arw2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path></marker></defs>
+                <g color="currentColor" style="color:var(--muted)">
+                  <line x1="105" y1="40" x2="128" y2="40" marker-end="url(#arw2)"></line>
+                  <line x1="235" y1="40" x2="258" y2="40" marker-end="url(#arw2)"></line>
+                  <line x1="365" y1="40" x2="388" y2="40" marker-end="url(#arw2)"></line>
+                  <path d="M425 62 C 425 120, 165 120, 165 62" fill="none" marker-end="url(#arw2)"></path>
+                  <text x="295" y="112" text-anchor="middle" font-size="10.5">不达标 → 回到例题</text>
+                </g>
+                <g style="color:var(--ink)">
+                  <rect x="15" y="18" width="90" height="44" rx="9" fill="var(--accent-soft)" stroke="var(--accent)"></rect>
+                  <text x="60" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">① 通读概念</text>
+                  <text x="60" y="52" text-anchor="middle" font-size="9.5" fill="currentColor">不动笔，建立直觉</text>
+                  <rect x="128" y="18" width="107" height="44" rx="9" fill="var(--accent-soft)" stroke="var(--accent)"></rect>
+                  <text x="181" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">② 手推例题</text>
+                  <text x="181" y="52" text-anchor="middle" font-size="9.5" fill="currentColor">遮住答案自己写</text>
+                  <rect x="258" y="18" width="107" height="44" rx="9" fill="var(--accent-soft)" stroke="var(--accent)"></rect>
+                  <text x="311" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">③ 章末习题</text>
+                  <text x="311" y="52" text-anchor="middle" font-size="9.5" fill="currentColor">B 组必须动手算</text>
+                  <rect x="388" y="18" width="72" height="44" rx="9" fill="var(--accent-soft)" stroke="var(--accent)"></rect>
+                  <text x="424" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">④ 自测</text>
+                  <text x="424" y="52" text-anchor="middle" font-size="9.5" fill="currentColor">默写总结表</text>
+                </g>
+                <text x="237" y="155" text-anchor="middle" font-size="11" style="fill:var(--muted)">达标标准：A 组 ≥90% · B 组 ≥80% · 能默写「方法—适用条件—误差阶」表</text>
+              </svg>
+            </figure>
+            <div class="tblwrap" style="margin-top:8px">
+              <table class="data">
+                <tr><th>周</th><th>内容</th><th>交付物</th></tr>
+                <tr><td class="num">1</td><td>01、02 章（含证明抄默）</td><td>02 章 B 组全对</td></tr>
+                <tr><td class="num">2</td><td>03、04 章</td><td>手算 3×3 LU 与 5 步 GS 表</td></tr>
+                <tr><td class="num">3</td><td>05、06 章</td><td>默写 Newton 收敛证明链</td></tr>
+                <tr><td class="num">4</td><td>07、08 章</td><td>一次做对完整差商表</td></tr>
+                <tr><td class="num">5</td><td>09、10 章</td><td>背 Simpson 余项、判代数精度</td></tr>
+                <tr><td class="num">6</td><td>11 章 + 模拟卷一（限时）</td><td>模考成绩与错因清单</td></tr>
+                <tr><td class="num">7</td><td>回补薄弱章 + 速查表通读</td><td>清完「不确定」标记</td></tr>
+                <tr><td class="num">8</td><td>模拟卷二 + 证明默写</td><td>考前最后一遍</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 第1章 ================= -->
+      <section class="chapter" id="ch1">
+        <div class="ch-head">
+          <div class="ch-num">01</div>
+          <div class="ch-title-wrap">
+            <h3>误差与浮点数</h3>
+            <div class="chips"><span class="chip">§1.1</span><span class="chip">难度 ★★</span><span class="chip w-mid">权重：中高（填空/简答必考）</span><span class="chip">8h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch1">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>计算机不能表示所有实数，每一步运算都在引入误差。本章回答三个问题：误差从哪来（模型/观测/截断/舍入四来源）、怎么度量（绝对/相对误差与有效数字）、怎么控制（数值稳定五原则与好算法设计）。后面每一章的误差界都用这里的语言书写。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>误差四来源：模型误差、观测误差、<b>截断误差</b>（方法带来）、<b>舍入误差</b>（机器带来）—— 数值分析只管后两个。</li>
+              <li>相对误差比绝对误差更能反映精度；有效数字位数 n 与相对误差限可互推（两个互推定理必背）。</li>
+              <li>浮点数 $x=\pm 0.d_1d_2\cdots d_t \times \beta^e$，舍入模型 $fl(x)=x(1+\delta)$，$|\delta|\le \varepsilon$（机器精度）。</li>
+              <li>五条计算原则：避免相近数相减、避免大数吃小数、避免绝对值很小的数作除数、减少运算次数、选稳定算法。</li>
+              <li>秦九韶算法：n 次多项式求值只需 n 次乘法 n 次加法，且更稳定。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">相对误差限 → 有效数字</span>$|e_r| \le \dfrac{1}{2a_1}\times 10^{-(n-1)}$ ⇒ x* 有 n 位有效数字</div>
+              <div class="frow"><span class="fname">误差传播（微分法）</span>$e(f) \approx f'(x)\,e(x)$，$\ e_r(x_1 x_2)\approx e_r(x_1)+e_r(x_2)$</div>
+              <div class="frow"><span class="fname">双精度机器精度</span>$\varepsilon = 2^{-52} \approx 2.2\times 10^{-16}$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 1A</span>IEEE 754 浮点数拆解器 —— 你输入的数，机器存的到底是什么？</div>
+          <div class="demo-body">
+            <div class="controls">
+              <div class="ctl"><label>输入任意小数</label><input id="fp-input" type="text" value="0.1" style="width:160px;font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)"></div>
+            </div>
+            <div class="readout" id="fp-out"></div>
+            <p class="demo-note">双精度共 64 位：<b style="color:var(--s2)">符号 1 位</b> + <b style="color:var(--s1)">指数 11 位</b> + <b style="color:var(--s3)">尾数 52 位</b>。试试 0.1、0.3、1/3 —— 十进制有限小数在二进制下大多是无限循环，存进去就有舍入误差。这就是 0.1 + 0.2 ≠ 0.3 的根源。</p>
+          </div>
+        </figure>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 1B</span>灾难性抵消 —— 同一个极限，两种算法，天壤之别</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-cancel"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>h</label><input id="cancel-h" type="range" min="-16" max="-1" step="0.1" value="-4"><output id="cancel-hv"></output></div>
+            </div>
+            <div class="legend"><span><i style="background:var(--s2)"></i>不稳定式 (√(1+h)−1)/h</span><span><i style="background:var(--s3)"></i>稳定式 1/(√(1+h)+1)</span></div>
+            <div class="readout" id="cancel-read"></div>
+            <p class="demo-note">两式数学上恒等，数值上天差地别：h 变小时 √(1+h)−1 是两个相近数相减，相对误差爆炸；有理化改写后误差始终贴近机器精度。<b>「数学等价 ≠ 数值等价」是本章的第一课。</b></p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>绝对误差不是误差的绝对值：$e=x-x^*$ 可正可负。</li>
+            <li>有效数字从<b>第一个非零数字</b>数起；末尾的 0 也算（0.003400 有 4 位）。</li>
+            <li>「大数吃小数」：$10^{15}+1$ 在双精度下结果仍是 $10^{15}$，求和要从小到大加。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第2章 ================= -->
+      <section class="chapter" id="ch2">
+        <div class="ch-head">
+          <div class="ch-num">02</div>
+          <div class="ch-title-wrap">
+            <h3>范数与线性方程组的性态</h3>
+            <div class="chips"><span class="chip">§1.2 + §1.3</span><span class="chip">难度 ★★★★</span><span class="chip w-max">权重：最高（计算+证明）</span><span class="chip">14h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch2">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>向量和矩阵的「长度」怎么定义？扰动会被放大多少倍？本章是全书的理论地基：范数给出度量，条件数 $\kappa(A)$ 量化「病态」，谱半径 $\rho(B)&lt;1$ 是第 4 章一切迭代收敛判据的核心。证明题高发区。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>范数三公理：非负、齐次、三角不等式；次乘性 $\|AB\|\le\|A\|\|B\|$ 是<b>额外要求</b>，不是公理。</li>
+              <li>有限维空间任意两范数等价 ⇒ 收敛性与范数选择无关，但常数不同。</li>
+              <li>算子范数三公式必背；$\|A\|_2=\sqrt{\lambda_{\max}(A^TA)}$ <b>别忘开根号</b>。</li>
+              <li>$\rho(A)\le\|A\|$（任意算子范数）；对称矩阵取 2-范数时取等。</li>
+              <li>扰动界：$\dfrac{\|\delta x\|}{\|x\|}\le \kappa(A)\dfrac{\|\delta b\|}{\|b\|}$；残差小 ⇏ 误差小（病态时）。</li>
+              <li>有效数字损失 ≈ $\lg \kappa(A)$ 位。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">算子范数三公式</span>$\|A\|_1=\max_j\sum_i|a_{ij}|$（列和）　$\|A\|_\infty=\max_i\sum_j|a_{ij}|$（行和）　$\|A\|_2=\sqrt{\lambda_{\max}(A^TA)}$</div>
+              <div class="frow"><span class="fname">条件数</span>$\kappa(A)=\|A\|\,\|A^{-1}\|$，$\kappa(A)\ge 1$</div>
+              <div class="frow"><span class="fname">谱半径</span>$\rho(A)=\max_i|\lambda_i| \le \|A\|$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 2A</span>p-范数单位球 —— 范数换一换，「圆」就不是圆了</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-ball"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>p</label><input id="ball-p" type="range" min="1" max="8" step="0.1" value="2"><output id="ball-pv"></output></div>
+            </div>
+            <div class="readout" id="ball-read"></div>
+          </div>
+        </figure>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 2B</span>条件数 = 误差放大器 —— κ 每 ×10，解的可信度少一位</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-cond"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>κ(A)</label><input id="cond-k" type="range" min="0" max="6" step="0.1" value="2"><output id="cond-kv"></output></div>
+              <div class="ctl"><label>输入扰动 ‖δb‖/‖b‖</label><input id="cond-d" type="range" min="0.1" max="5" step="0.1" value="1"><output id="cond-dv"></output></div>
+            </div>
+            <div class="readout" id="cond-read"></div>
+            <p class="demo-note">取 $A=\mathrm{diag}(\kappa,1)$，沿最坏方向扰动右端：输出误差 ≈ 输入扰动 × κ。$\kappa=10^6$ 时 1% 的右端扰动能把解完全毁掉 —— 这就是 Hilbert 矩阵恐怖的地方。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>$\|A\|_1$ 是最大<b>列</b>和，$\|A\|_\infty$ 是最大<b>行</b>和 —— 与直觉相反。</li>
+            <li>行列式小 ≠ 病态（对角阵 diag(1,10⁻⁸) 病态但 det 不小；diag(10⁻⁸,10⁻⁸) det 极小却完全良态）。</li>
+            <li>求 $\kappa_\infty$ 要先显式算 $A^{-1}$，别想绕过去。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第3章 ================= -->
+      <section class="chapter" id="ch3">
+        <div class="ch-head">
+          <div class="ch-num">03</div>
+          <div class="ch-title-wrap">
+            <h3>线性方程组直接解法</h3>
+            <div class="chips"><span class="chip">教材第 2 章</span><span class="chip">难度 ★★</span><span class="chip w-high">权重：高（大题必出）</span><span class="chip">12h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch3">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>Cramer 法则解 n 元方程组要算 n+1 个行列式，运算量 (n+1)! 级 —— n=20 时每秒百亿次的机器要算上万年。Gauss 消元只要 $n^3/3$ 次乘除。本章训练考试计算题的主力手算流程：消元、选主元、LU、Cholesky、追赶法。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>Gauss 消元 = 消元（乘数 $l_{ik}=a_{ik}/a_{kk}$）+ 回代；乘除总次数约 $n^3/3$。</li>
+              <li>小主元危险：乘数巨大 ⇒ 舍入误差被放大 ⇒ <b>列主元/完全主元</b>是必须的。</li>
+              <li>消元的矩阵形式：$A=LU$（Doolittle：L 单位下三角）；对称正定 ⇒ Cholesky $A=LL^T$ 或 $LDL^T$。</li>
+              <li>三对角阵用追赶法：$O(n)$，本质是 LU 的特例。</li>
+              <li>误差分析：增长因子 $\rho_n$ 控制舍入误差放大；迭代改善可再榨出几位精度。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">Doolittle 递推</span>$u_{ij}=a_{ij}-\sum_{k=1}^{i-1}l_{ik}u_{kj}$，$\ l_{ij}=\dfrac{a_{ij}-\sum_{k=1}^{j-1}l_{ik}u_{kj}}{u_{jj}}$</div>
+              <div class="frow"><span class="fname">Cholesky</span>$l_{jj}=\sqrt{a_{jj}-\sum_{k=1}^{j-1}l_{jk}^2}$</div>
+              <div class="frow"><span class="fname">追赶法（三对角）</span>先 $\beta_i$ 递推 → 前进消元 → 后退回代</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 3</span>Gauss 消元步进机 —— 3×3 全程手算一遍的动画版</div>
+          <div class="demo-body">
+            <div class="matflow" id="gauss-stage"></div>
+            <div class="demo-note" id="gauss-note" style="font-family:var(--font-mono);font-size:12.5px"></div>
+            <div class="controls">
+              <div class="ctl"><button id="gauss-prev">← 上一步</button><button id="gauss-next" class="primary">下一步 →</button></div>
+            </div>
+            <div id="gauss-lu"></div>
+            <p class="demo-note">方程组 $2x_1+x_2-x_3=8$，$-3x_1-x_2+2x_3=-11$，$-2x_1+x_2+2x_3=-3$。蓝格 = 当前主元，橙格 = 被消元改写的行，绿格 = 回代出的解。走完 6 步你会看到：消元过程中「顺手记下的乘数」拼起来就是 L，剩下的上三角就是 U —— LU 分解不是新东西，就是 Gauss 消元的记账方式。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>Cholesky 开方只发生在对角元 $l_{jj}$，其余元素不开方。</li>
+            <li>LU 分解存在唯一 ⟺ 各阶顺序主子式非零；不是所有矩阵都能不选主元直接分解。</li>
+            <li>追赶法只适用于<b>三对角</b>且对角占优/顺序主子式非零的情形。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第4章 ================= -->
+      <section class="chapter" id="ch4">
+        <div class="ch-head">
+          <div class="ch-num">04</div>
+          <div class="ch-title-wrap">
+            <h3>解线性方程组的迭代法</h3>
+            <div class="chips"><span class="chip">教材第 2 章后半</span><span class="chip">难度 ★★★</span><span class="chip w-high">权重：高（迭代表格几乎必考）</span><span class="chip">12h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch4">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>大型稀疏方程组（几百万阶、每行只有几个非零元）用直接法会把零元填满。迭代法从一个猜测出发反复修正：$x^{(k+1)}=Bx^{(k)}+g$。核心问题永远是两个：<b>收敛吗</b>（$\rho(B)&lt;1$ 充要）？<b>多快</b>（$R=-\ln\rho(B)$）？</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>矩阵分裂 $A=M-N$；Jacobi 取 $M=D$，GS 取 $M=D-L$，SOR 在 GS 上加松弛因子 $\omega$。</li>
+              <li>收敛充要：$\rho(B)&lt;1$；充分条件：$\|B\|&lt;1$ 或 A 严格对角占优。</li>
+              <li>两点格式 + 一致排序 ⇒ $\rho(B_{GS})=\rho(B_J)^2$，GS 约快一倍。</li>
+              <li>SOR 最优因子 $\omega^*=\dfrac{2}{1+\sqrt{1-\rho(B_J)^2}}$，可把收敛速度再提升一个量级。</li>
+              <li>后验停机：$\|x^{(k)}-x^{(k-1)}\|&lt;\varepsilon'$ 配合 $\dfrac{q}{1-q}$ 因子换算真误差。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">Jacobi 迭代矩阵</span>$B_J=D^{-1}(L+U)$，$x_i^{(k+1)}=\dfrac{1}{a_{ii}}\Big(b_i-\sum_{j\ne i}a_{ij}x_j^{(k)}\Big)$</div>
+              <div class="frow"><span class="fname">误差估计</span>$\|e^{(k)}\|\le q^k\|e^{(0)}\|$，$\ \|e^{(k)}\|\le \dfrac{q}{1-q}\|x^{(k)}-x^{(k-1)}\|$</div>
+              <div class="frow"><span class="fname">收敛速度</span>$R(B)=-\ln\rho(B)$，k 步误差压缩比 ≈ $\rho(B)^k$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 4A</span>Jacobi vs Gauss-Seidel —— 同一个出发点，两条收敛路径</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-iter"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>迭代步数</label><input id="iter-steps" type="range" min="1" max="12" step="1" value="6"><output id="iter-stepsv"></output></div>
+            </div>
+            <div class="legend"><span><i style="background:var(--s1)"></i>Jacobi</span><span><i style="background:var(--s2)"></i>Gauss-Seidel</span></div>
+            <div class="readout" id="iter-read"></div>
+            <p class="demo-note">方程组 $A=\begin{pmatrix}3&amp;1\\1&amp;2\end{pmatrix}$，$b=(5,5)^T$。GS「算出一个新分量立刻用」，所以折线每段都直指当前最优方向；Jacobi 全体用旧值，路径更绕。</p>
+          </div>
+        </figure>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 4B</span>SOR 松弛因子 —— ρ(ω) 曲线上的「悬崖」</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-sor"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>ω</label><input id="sor-w" type="range" min="0.05" max="1.95" step="0.01" value="1"><output id="sor-wv"></output></div>
+            </div>
+            <div class="readout" id="sor-read"></div>
+            <p class="demo-note">拖动 ω 从 1 缓慢右移：谱半径先缓慢下降，到 ω* 附近突然砸到谷底，越过 ω* 又急速回升，ω≥2 必发散。这条 V 形（左缓右陡）曲线解释了为什么「ω 宁取稍大、勿取稍小」。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>「$\|B\|&lt;1$」只是充分条件；判断收敛性的终极武器是 $\rho(B)&lt;1$。</li>
+            <li>对角占优 ⇒ Jacobi 与 GS 都收敛，但反之不然。</li>
+            <li>GS 不一定比 Jacobi 快 —— 只对两点格式一致排序矩阵有 $\rho_{GS}=\rho_J^2$。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第5章 ================= -->
+      <section class="chapter" id="ch5">
+        <div class="ch-head">
+          <div class="ch-num">05</div>
+          <div class="ch-title-wrap">
+            <h3>非线性方程与方程组的数值解法</h3>
+            <div class="chips"><span class="chip">教材第 3 章</span><span class="chip">难度 ★★</span><span class="chip w-high">权重：高</span><span class="chip">10h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch5">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>$f(x)=0$ 超过四次就没有求根公式。本章是一套「迭代逼近」方法论：二分保底、不动点统一框架、Newton 主力、弦截免去导数。<b>收敛阶</b>是核心考点：线性 → 超线性(1.618) → 平方。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>二分法：误差界 $(b-a)/2^{k+1}$，慢但必收敛（要求端点异号）。</li>
+              <li>不动点 $x=g(x)$：$|g'(x)|\le L&lt;1$ ⇒ 收敛；$g'(x^*)\ne 0$ 时线性收敛。</li>
+              <li>Aitken/Steffensen 加速：把线性序列「外推」成更高阶。</li>
+              <li>Newton：$x_{k+1}=x_k-f(x_k)/f'(x_k)$，单根 + 初值近 ⇒ 平方收敛；重根退化为线性（比 $(m-1)/m$）。</li>
+              <li>弦截法用差商代替导数，收敛阶 $\frac{1+\sqrt5}{2}\approx1.618$。</li>
+              <li>方程组 Newton：每步解线性方程组 $J(x^{(k)})\,\Delta x = -F(x^{(k)})$。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">收敛阶定义</span>$\lim_{k\to\infty}\dfrac{|e_{k+1}|}{|e_k|^p}=C\ne 0$ ⇒ p 阶收敛</div>
+              <div class="frow"><span class="fname">Newton 误差递推（平方收敛证明核心）</span>$e_{k+1}=\dfrac{f''(\xi)}{2f'(x_k)}e_k^2$</div>
+              <div class="frow"><span class="fname">二分法步数预估</span>$k \ge \log_2\dfrac{b-a}{\varepsilon}-1$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 5</span>求根方法赛跑 —— 二分 / Newton / 弦截同场对比</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-root"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>方程</label><select id="root-f"><option value="cos">cos x − x</option><option value="cub">x³ − x − 2</option><option value="exp">e^(−x) − x</option></select></div>
+              <div class="ctl"><label>方法</label><select id="root-m"><option value="newton">Newton（切线）</option><option value="sec">弦截（割线）</option><option value="bis">二分</option></select></div>
+              <div class="ctl"><label>初值 x₀</label><input id="root-x0" type="range" min="0" max="1.5" step="0.05" value="0.5"></div>
+            </div>
+            <div class="readout" id="root-read"></div>
+            <div class="itertable" id="root-table"></div>
+            <p class="demo-note">看右侧误差列的指数：Newton 每步<b>翻倍</b>（10⁻²→10⁻⁵→10⁻¹⁰），二分每步只 −0.3。橙色直线是各步的切线/割线 —— Newton 法的几何意义就是「用切线的零点近似曲线的零点」。把初值拖到平坦处，看 Newton 怎么翻车。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>「Newton 一定平方收敛」错：重根退化为线性；初值差可能根本不收敛。</li>
+            <li>二分法要求 $f(a)f(b)&lt;0$，偶数重根附近两端同号，二分法失效。</li>
+            <li>不动点迭代收敛 ⟸ 压缩条件，收敛速度由 $|g'(x^*)|$ 决定，越接近 1 越慢。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第6章 ================= -->
+      <section class="chapter" id="ch6">
+        <div class="ch-head">
+          <div class="ch-num">06</div>
+          <div class="ch-title-wrap">
+            <h3>函数的最佳平方逼近与曲线拟合</h3>
+            <div class="chips"><span class="chip">教材第 4 章</span><span class="chip">难度 ★★★</span><span class="chip w-mid">权重：中高</span><span class="chip">10h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch6">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>实验数据有噪声，插值要求曲线穿过每个点反而过拟合。最小二乘改求「残差平方和最小」：$\min\|Ac-b\|_2$。解法是法方程 $A^TAc=A^Tb$ —— 但法方程条件数被平方（$\kappa(A^TA)=\kappa(A)^2$），所以工程上用 QR 或 SVD 绕开它。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>最小二乘解 ⟺ 残差与列空间正交 ⟺ 法方程 $A^TAc=A^Tb$。</li>
+              <li>多项式拟合：法方程的系数矩阵是 Hilbert 型，次数升高即病态。</li>
+              <li>正交化（Gram-Schmidt/Householder）得 $A=QR$，则 $c=R^{-1}Q^Tb$，数值更稳。</li>
+              <li>SVD $A=U\Sigma V^T$ 给出广义逆 $A^+=V\Sigma^+U^T$，处理秩亏问题的终极工具。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">法方程</span>$A^TAc=A^Tb$，残差 $r=b-Ac\perp \mathrm{span}(A)$</div>
+              <div class="frow"><span class="fname">条件数代价</span>$\kappa_2(A^TA)=\kappa_2(A)^2$</div>
+              <div class="frow"><span class="fname">多项式拟合（基 $1,x,\dots,x^m$）</span>$\sum_{j=0}^m\big(\sum_i x_i^{k+j}\big)c_j=\sum_i y_i x_i^k$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 6</span>最小二乘拟合沙盘 —— 自己点数据，看次数升高的代价</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-lsq"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>拟合次数 m</label><input id="lsq-deg" type="range" min="1" max="8" step="1" value="2"><output id="lsq-degv"></output></div>
+              <div class="ctl"><button id="lsq-sample">载入示例数据</button><button id="lsq-clear">清空</button></div>
+            </div>
+            <div class="readout" id="lsq-read"></div>
+            <p class="demo-note">在画布上点击即可添加数据点。m=1 是直线回归，m=2 贴合示例数据的抛物线趋势；把 m 拖到 6 以上，曲线开始为过每个噪声点而抖动、残差下降但模型更糟 —— 并且法方程的条件数在爆炸，这正是第 6.4 节引入 QR 的动机。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>最小二乘 ≠ 插值：不要求过点，m+1 个基函数 ≠ 数据点数。</li>
+              <li>次数越高残差单调不增，但泛化可能更差；法方程随次数病态加剧。</li>
+            <li>选 2-范数因为它对应正交投影、可微、几何上是「垂足」。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第7章 ================= -->
+      <section class="chapter" id="ch7">
+        <div class="ch-head">
+          <div class="ch-num">07</div>
+          <div class="ch-title-wrap">
+            <h3>矩阵特征值与特征向量的计算</h3>
+            <div class="chips"><span class="chip">教材第 5 章</span><span class="chip">难度 ★★★</span><span class="chip w-mid">权重：中（常作小计算题）</span><span class="chip">9h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch7">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>特征多项式求根在数值上是坏路子（高次多项式求根本身病态）。幂法反复「乘矩阵再归一化」，向量就会转向主特征方向 —— 简单粗暴但思想统治全章：反幂法求最小、位移法求任意、Rayleigh 商加速、QR 方法通吃。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>Gershgorin 圆盘定理：特征值落在 n 个圆盘的并集里（估计用）。</li>
+              <li>幂法：$v_{k+1}=Av_k/\|Av_k\|$，收敛比 $|\lambda_2/\lambda_1|$，线性收敛。</li>
+              <li>反幂法：对 $(A-pI)^{-1}$ 用幂法 ⇒ 求离 p 最近的特征值。</li>
+              <li>Rayleigh 商 $\mu=\dfrac{v^TAv}{v^Tv}$，对对称矩阵给出平方级加速。</li>
+              <li>QR 方法：$A_k=Q_kR_k \to A_{k+1}=R_kQ_k$，正交相似保持特征值，收敛到上三角。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">幂法误差</span>误差每步约 $\times \left|\dfrac{\lambda_2}{\lambda_1}\right|$</div>
+              <div class="frow"><span class="fname">Gershgorin 圆盘</span>$D_i=\{z:|z-a_{ii}|\le \sum_{j\ne i}|a_{ij}|\}$</div>
+              <div class="frow"><span class="fname">位移思想</span>$\lambda(A-pI)^{-1}$ 的主特征值 = $1/(\lambda_i-p)$ 最大者</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 7</span>幂法实况 —— 向量如何一步步「转向」主特征方向</div>
+          <div class="demo-body">
+            <div class="two-col">
+              <div class="demo-canvas-wrap"><canvas id="cv-power"></canvas></div>
+              <div class="demo-canvas-wrap"><canvas id="cv-power-err"></canvas></div>
+            </div>
+            <div class="controls">
+              <div class="ctl"><label>λ₂/λ₁</label><input id="pow-l2" type="range" min="0.05" max="0.95" step="0.01" value="0.6"><output id="pow-l2v"></output></div>
+              <div class="ctl"><label>初值角度</label><input id="pow-a0" type="range" min="5" max="175" step="1" value="100"><output id="pow-a0v"></output></div>
+            </div>
+            <div class="readout" id="pow-read"></div>
+            <p class="demo-note">左图：单位圆上的迭代向量（颜色越深迭代越靠后）逐渐贴向虚线主特征方向。右图：Rayleigh 商误差的半对数曲线 vs 理论斜率。把 λ₂/λ₁ 拖到 0.9 以上，看误差曲线怎么变平 —— 特征值「挤在一起」时幂法失效，必须位移或加速。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>幂法只求按模<b>最大</b>特征值；要求主特征值唯一（$|\lambda_1|&gt;|\lambda_2|$）。</li>
+            <li>反幂法每步要解方程组 $(A-pI)x=v$ —— 用 LU 一次分解反复用。</li>
+            <li>归一化不可省，否则分量指数爆炸/下溢。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第8章 ================= -->
+      <section class="chapter" id="ch8">
+        <div class="ch-head">
+          <div class="ch-num">08</div>
+          <div class="ch-title-wrap">
+            <h3>插值法</h3>
+            <div class="chips"><span class="chip">教材第 6 章</span><span class="chip">难度 ★★★</span><span class="chip w-max">权重：最高（差商表/样条必出）</span><span class="chip">14h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch8">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>函数只知道若干点的值，怎么补全整条曲线？插值是函数逼近主线的地基：数值积分的求积公式、ODE 的多步法都从插值多项式积分/求导而来。本章计算密度全课程最高：差商表、Hermite、三弯矩方程。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>n+1 个互异节点 ⇒ 次数 ≤n 的插值多项式<b>存在唯一</b>（Lagrange 与 Newton 是同一个多项式的两种写法）。</li>
+              <li>Newton 形式配差商表，加节点可增量计算 —— 考试必考整张表。</li>
+              <li>余项 $R_n(x)=\dfrac{f^{(n+1)}(\xi)}{(n+1)!}\omega(x)$，$\omega(x)=\prod(x-x_i)$ —— 误差由「节点的乘积」控制。</li>
+              <li>等距高次 ⇒ Runge 现象；药方：Chebyshev 节点 / 分段低次 / 三次样条。</li>
+              <li>三次样条：分段三次 + 二阶连续 ⇒ 三弯矩方程组（三对角，追赶法解）。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">差商递推</span>$f[x_0,\dots,x_k]=\dfrac{f[x_1,\dots,x_k]-f[x_0,\dots,x_{k-1}]}{x_k-x_0}$</div>
+              <div class="frow"><span class="fname">插值余项</span>$R_n(x)=\dfrac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^n(x-x_i)$</div>
+              <div class="frow"><span class="fname">差商与导数</span>$f[x_0,\dots,x_k]=\dfrac{f^{(k)}(\xi)}{k!}$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 8</span>Runge 现象 —— 「次数越高越准」是怎么破产的</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-runge"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>次数 n</label><input id="runge-n" type="range" min="4" max="20" step="1" value="8"><output id="runge-nv"></output></div>
+              <div class="ctl"><span class="seg" id="runge-seg"><button data-m="eq" class="on">等距节点</button><button data-m="cheb">Chebyshev 节点</button></span></div>
+            </div>
+            <div class="legend"><span><i style="background:var(--s1)"></i>原函数 1/(1+25x²)</span><span><i style="background:var(--s2)"></i>插值多项式</span></div>
+            <div class="readout" id="runge-read"></div>
+            <p class="demo-note">等距节点下把 n 拖到 16 以上：中间贴合完美，端点附近插值曲线疯狂振荡、误差随 n 爆炸 —— 这就是 Runge 现象。切到 Chebyshev 节点（端点加密）再看：误差被均匀压平。节点分布比次数更重要。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>差商表每一列都要填满，Newton 系数取<b>对角线</b>。</li>
+            <li>余项里的 $\xi$ 依赖 x；$|R_n|$ 的估计要对 $|f^{(n+1)}|$ 和 $|\omega(x)|$ 分别取上界。</li>
+            <li>样条的「三弯矩」方程需要补两个边界条件（固支/自然/周期）才封闭。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第9章 ================= -->
+      <section class="chapter" id="ch9">
+        <div class="ch-head">
+          <div class="ch-num">09</div>
+          <div class="ch-title-wrap">
+            <h3>函数逼近与正交多项式</h3>
+            <div class="chips"><span class="chip">教材第 7 章</span><span class="chip">难度 ★★★★</span><span class="chip w-mid">权重：中</span><span class="chip">9h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch9">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>插值管「过点」，逼近管「整体最优」。两种最优标准：一致逼近（最大误差最小，Chebyshev 交错定理）与平方逼近（加权积分误差最小，正交多项式）。Chebyshev 多项式是串起两头的明星：它的零点是最佳插值节点，它本身是 [-1,1] 上的正交基。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>交错定理：p 是最佳一致逼近 ⟺ 误差 $f-p$ 在至少 n+2 个点上正负交错取到 $\|f-p\|_\infty$。</li>
+              <li>$T_n(x)=\cos(n\arccos x)$：首项系数 $2^{n-1}$，$T_n/2^{n-1}$ 是首一 n 次多项式中一致范数最小者。</li>
+              <li>用 $T_{n+1}$ 的零点做插值节点 ⇒ 余项中的 $\|\omega\|_\infty$ 最小化（Chebyshev 插值）。</li>
+              <li>正交多项式族：Legendre（[-1,1], w=1）、Chebyshev（$w=1/\sqrt{1-x^2}$）、Laguerre、Hermite，三项递推通用。</li>
+              <li>最佳平方逼近 = 向正交基做投影：$f\approx\sum \langle f,\varphi_k\rangle \varphi_k$。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">Chebyshev 递推</span>$T_{n+1}=2xT_n-T_{n-1}$，$T_0=1,\ T_1=x$</div>
+              <div class="frow"><span class="fname">零点与交错点</span>零点 $x_k=\cos\dfrac{(2k+1)\pi}{2n}$；极值点 $x_k=\cos\dfrac{k\pi}{n}$ 处 $T_n=\pm1$</div>
+              <div class="frow"><span class="fname">正交性</span>$\int_{-1}^1\dfrac{T_mT_n}{\sqrt{1-x^2}}dx=0\ (m\ne n)$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 9</span>Chebyshev 多项式解剖 —— 等幅振荡为什么反而最优</div>
+          <div class="demo-body">
+            <div class="two-col">
+              <div class="demo-canvas-wrap"><canvas id="cv-cheb"></canvas></div>
+              <div class="demo-canvas-wrap"><canvas id="cv-omega"></canvas></div>
+            </div>
+            <div class="controls">
+              <div class="ctl"><label>n</label><input id="cheb-n" type="range" min="1" max="10" step="1" value="5"><output id="cheb-nv"></output></div>
+            </div>
+            <div class="legend"><span><i style="background:var(--s1)"></i>T_n(x)</span><span><i style="background:var(--s2)"></i>交错点（±1）</span><span><i style="background:var(--s3)"></i>零点</span></div>
+            <div class="readout" id="cheb-read"></div>
+            <p class="demo-note">左图拖 n：T_n 永远在 [−1,1] 内以等幅 ±1 振荡 n+1 次，绝不「越界」—— 正是这个等幅性让它成为最小一致范数的首一多项式。右图：节点乘积 |ω(x)| 的对比，Chebyshev 节点把误差「摊平」到全区间（绿线），等距节点则在端点拱起两个大包（橙线）—— 这就是实验 8 的药方原理。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>$T_n$ 的首项系数是 $2^{n-1}$（n≥1），所以「首一化」要除以 $2^{n-1}$。</li>
+            <li>交错定理需要 n+2 个交错点，不是 n+1。</li>
+            <li>换区间 [a,b] 时零点要做线性变换 $x=\frac{a+b}{2}+\frac{b-a}{2}t$。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第10章 ================= -->
+      <section class="chapter" id="ch10">
+        <div class="ch-head">
+          <div class="ch-num">10</div>
+          <div class="ch-title-wrap">
+            <h3>数值积分与数值微分</h3>
+            <div class="chips"><span class="chip">教材第 8 章</span><span class="chip">难度 ★★</span><span class="chip w-high">权重：高（表格题）</span><span class="chip">11h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch10">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>大多数定积分没有原函数的初等表达。思路：用插值多项式代替被积函数再积分 ⇒ Newton-Cotes 一族；把区间切小 ⇒ 复化公式；用误差渐近展开做外推 ⇒ Romberg；让节点也参与优化 ⇒ Gauss 型（n+1 个节点达到 2n+1 次代数精度）。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>代数精度：公式对 $1,x,\dots,x^m$ 精确成立的最高 m —— 判定题必考。</li>
+              <li>梯形（1 阶精度，余项 $O(h^2)$）与 Simpson（3 阶精度，余项 $O(h^4)$）是两个基准。</li>
+              <li>复化 = 分段低次：n 等分后误差 $O(h^2)/O(h^4)$。</li>
+              <li>Romberg：梯形序列按 $\dfrac{4^mR_{k,m-1}-R_{k-1,m-1}}{4^m-1}$ 逐列外推，每列升 2 阶。</li>
+              <li>Gauss-Legendre：节点 = Legendre 多项式零点，n+1 点达 2n+1 阶代数精度（最高）。</li>
+              <li>数值微分病态：$h$ 太小则 $\varepsilon/h$ 爆炸，存在最优步长。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">复化梯形余项</span>$-\dfrac{b-a}{12}h^2f''(\eta)$　<span class="fname">复化 Simpson 余项</span>$-\dfrac{b-a}{180}h^4f^{(4)}(\eta)$</div>
+              <div class="frow"><span class="fname">Simpson（n=2）</span>$\dfrac{b-a}{6}\left[f(a)+4f\!\left(\tfrac{a+b}{2}\right)+f(b)\right]$</div>
+              <div class="frow"><span class="fname">Romberg 外推</span>$R_{k,m}=R_{k,m-1}+\dfrac{R_{k,m-1}-R_{k-1,m-1}}{4^m-1}$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 10</span>复化求积 + Romberg 外推表 —— 误差收敛速度亲眼可见</div>
+          <div class="demo-body">
+            <div class="two-col">
+              <div class="demo-canvas-wrap"><canvas id="cv-quad"></canvas></div>
+              <div class="demo-canvas-wrap"><canvas id="cv-quad-err"></canvas></div>
+            </div>
+            <div class="controls">
+              <div class="ctl"><label>被积函数</label><select id="quad-f"><option value="sin">sin x on [0,π]</option><option value="r4">1/(1+x²) on [0,1]</option><option value="ex">eˣ on [0,1]</option></select></div>
+              <div class="ctl"><label>等分数 n</label><input id="quad-n" type="range" min="2" max="64" step="2" value="8"><output id="quad-nv"></output></div>
+            </div>
+            <div class="readout" id="quad-read"></div>
+            <div class="itertable" id="romberg-table"></div>
+            <p class="demo-note">右图是双对数误差曲线：n 翻倍，梯形误差 ÷4（斜率 2），Simpson ÷16（斜率 4）——「阶」就是双对数图上的斜率。下方 Romberg 表：左列是粗糙梯形值，每往右一列用相邻两行外推一次，右下角迅速逼近精确值。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>复化 Simpson 余项是 $\frac{b-a}{180}h^4$ 不是 $(h/2)^4$ —— 写错差 16 倍。</li>
+            <li>Newton-Cotes n 为偶数时代数精度跳到 n+1（奇对称白赚一阶）。</li>
+            <li>n≥8 的 Newton-Cotes 系数出现负值，不稳定 —— 高阶请走 Gauss 型。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 第11章 ================= -->
+      <section class="chapter" id="ch11">
+        <div class="ch-head">
+          <div class="ch-num">11</div>
+          <div class="ch-title-wrap">
+            <h3>常微分方程初值问题的数值解法</h3>
+            <div class="chips"><span class="chip">教材第 9 章</span><span class="chip">难度 ★★</span><span class="chip w-high">权重：高（数值表）</span><span class="chip">10h</span></div>
+          </div>
+          <label class="done-toggle"><input type="checkbox" id="done-ch11">本章完成</label>
+        </div>
+        <p class="why"><b>为什么学：</b>$y'=f(x,y)$ 大多没有解析解。数值法沿 x 轴一步步推进：Euler 用起点斜率（1 阶），改进 Euler 预测-校正（2 阶），RK4 每步加权四个斜率（4 阶）。除了精度，还要问<b>稳定性</b>：步长稍大，显式格式会直接爆炸。</p>
+        <div class="ch-cols">
+          <div class="points"><h4>核心要点</h4>
+            <ul>
+              <li>局部截断误差高一阶 = 整体误差阶：Euler $O(h)$、改进 Euler $O(h^2)$、RK4 $O(h^4)$。</li>
+              <li>RK4：$k_1=f(x_n,y_n)$，$k_2,k_3$ 半步，$k_4$ 终点，$y_{n+1}=y_n+\frac{h}{6}(k_1+2k_2+2k_3+k_4)$。</li>
+              <li>绝对稳定域：显式 Euler/改进 Euler 要求 $|1+z|&lt;1$（$z=\lambda h$，即 $h\lambda\in(-2,0)$）；RK4 界 ≈2.785。</li>
+              <li><b>任何显式 RK 都不是 A-稳定的</b>；刚性方程用隐式 Euler / 梯形法。</li>
+              <li>线性多步法（Adams）利用历史信息，每步只多算一次 f。</li>
+            </ul>
+          </div>
+          <div><h4>必背公式</h4>
+            <div class="formulabox">
+              <div class="frow"><span class="fname">Euler / 改进 Euler</span>$y_{n+1}=y_n+hf(x_n,y_n)$　/　预测 $\tilde y=y_n+hf_n$，校正 $y_{n+1}=y_n+\frac{h}{2}[f_n+f(x_{n+1},\tilde y)]$</div>
+              <div class="frow"><span class="fname">经典 RK4</span>$y_{n+1}=y_n+\frac{h}{6}(k_1+2k_2+2k_3+k_4)$</div>
+              <div class="frow"><span class="fname">收敛 ⟺ 相容 + 稳定（单步法）</span>整体误差 $O(h^p)$</div>
+            </div>
+          </div>
+        </div>
+
+        <figure class="demo">
+          <div class="demo-head"><span class="tag">实验 11</span>稳定性实验场 —— 把步长拖过红线，看显式格式逐个爆炸</div>
+          <div class="demo-body">
+            <div class="demo-canvas-wrap"><canvas id="cv-ode"></canvas></div>
+            <div class="controls">
+              <div class="ctl"><label>z = λh</label><input id="ode-z" type="range" min="0.1" max="3" step="0.05" value="0.8"><output id="ode-zv"></output></div>
+              <div class="ctl"><label><input type="checkbox" id="ode-eu" checked> Euler</label><label><input type="checkbox" id="ode-he" checked> 改进 Euler</label><label><input type="checkbox" id="ode-rk" checked> RK4</label></div>
+            </div>
+            <div class="legend"><span><i style="background:var(--s1)"></i>精确解 e^(−t)</span><span><i style="background:var(--s2)"></i>Euler（z&lt;2 稳定）</span><span><i style="background:var(--s7)"></i>改进 Euler（z&lt;2）</span><span><i style="background:var(--s3)"></i>RK4（z&lt;2.785）</span></div>
+            <div class="readout" id="ode-read"></div>
+            <p class="demo-note">模型方程 $y'=-\lambda y$ 无量纲化后只由 $z=\lambda h$ 决定行为。z 越过 2：Euler 和改进 Euler 开始振荡发散；再越过 2.785：连 RK4 也爆炸 —— 但精确解明明在衰减！这就是刚性方程的陷阱：精度够不代表稳定够。</p>
+          </div>
+        </figure>
+
+        <div class="pitfalls"><b>易错清单</b>
+          <ul>
+            <li>「阶数高就稳定」错：显式格式阶数再高稳定域也有界。</li>
+            <li>改进 Euler 的校正只用一次就是 2 阶精度，不必迭代到收敛。</li>
+            <li>RK4 每步要算 4 次 f，比较效率要按「每单位 f 计算量的精度」比。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 公式速查 ================= -->
+      <section id="formulas">
+        <div class="sec-head">
+          <div class="eyebrow">FORMULA SHEET</div>
+          <h2>全课程公式速查</h2>
+          <p>每章最核心公式的浓缩版，考前当「最后一遍过」。完整 16 节版见原资料《数值分析_全课程公式速查表.html》。</p>
+        </div>
+        <div class="fgrid">
+          <div class="fcard"><h4>01 误差</h4>
+            <div class="frow">$|e_r|\le\frac{1}{2a_1}\cdot 10^{-(n-1)}$<span class="fname">n 位有效数字 ⟺ 相对误差限</span></div>
+            <div class="frow">$fl(x)=x(1+\delta),\ |\delta|\le\varepsilon$<span class="fname">舍入模型</span></div>
+            <div class="frow">$e(f)\approx f'(x)e(x)$<span class="fname">误差传播</span></div>
+          </div>
+          <div class="fcard"><h4>02 范数</h4>
+            <div class="frow">$\|A\|_1$ 列和，$\|A\|_\infty$ 行和，$\|A\|_2=\sqrt{\lambda_{\max}(A^TA)}$<span class="fname">算子范数三公式</span></div>
+            <div class="frow">$\rho(A)\le\|A\|$<span class="fname">谱半径界</span></div>
+            <div class="frow">$\frac{\|\delta x\|}{\|x\|}\le\kappa(A)\frac{\|\delta b\|}{\|b\|}$<span class="fname">扰动界，κ=‖A‖‖A⁻¹‖</span></div>
+          </div>
+          <div class="fcard"><h4>03 直接法</h4>
+            <div class="frow">$A=LU$，消元乘除 $\approx n^3/3$<span class="fname">Doolittle</span></div>
+            <div class="frow">$A=LL^T$，$l_{jj}=\sqrt{a_{jj}-\sum_{k&lt;j}l_{jk}^2}$<span class="fname">Cholesky（对称正定）</span></div>
+          </div>
+          <div class="fcard"><h4>04 迭代法</h4>
+            <div class="frow">收敛 ⟺ $\rho(B)&lt;1$<span class="fname">充要条件</span></div>
+            <div class="frow">$B_J=D^{-1}(L+U)$，$\rho(B_{GS})=\rho(B_J)^2$<span class="fname">两点格式一致排序</span></div>
+            <div class="frow">$\omega^*=\frac{2}{1+\sqrt{1-\rho_J^2}}$<span class="fname">最优松弛因子</span></div>
+          </div>
+          <div class="fcard"><h4>05 非线性方程</h4>
+            <div class="frow">$|x_k-x^*|\le\frac{b-a}{2^{k+1}}$<span class="fname">二分误差界</span></div>
+            <div class="frow">$e_{k+1}=\frac{f''(\xi)}{2f'(x_k)}e_k^2$<span class="fname">Newton 平方收敛</span></div>
+            <div class="frow">弦截阶 $\frac{1+\sqrt5}{2}\approx1.618$<span class="fname">超线性</span></div>
+          </div>
+          <div class="fcard"><h4>06 最小二乘</h4>
+            <div class="frow">$A^TAc=A^Tb$<span class="fname">法方程</span></div>
+            <div class="frow">$\kappa(A^TA)=\kappa(A)^2$<span class="fname">法方程的代价 → 用 QR/SVD</span></div>
+          </div>
+          <div class="fcard"><h4>07 特征值</h4>
+            <div class="frow">幂法误差 $\sim|\lambda_2/\lambda_1|^k$<span class="fname">收敛比</span></div>
+            <div class="frow">$\mu(v)=\frac{v^TAv}{v^Tv}$<span class="fname">Rayleigh 商（对称阵平方加速）</span></div>
+          </div>
+          <div class="fcard"><h4>08 插值</h4>
+            <div class="frow">$R_n=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod(x-x_i)$<span class="fname">插值余项</span></div>
+            <div class="frow">$f[x_0,\dots,x_k]=\frac{f^{(k)}(\xi)}{k!}$<span class="fname">差商与导数</span></div>
+          </div>
+          <div class="fcard"><h4>09 逼近</h4>
+            <div class="frow">$T_{n+1}=2xT_n-T_{n-1}$<span class="fname">Chebyshev 递推</span></div>
+            <div class="frow">$\min\|p\|_\infty=\frac{1}{2^{n-1}}$（首一 n 次）<span class="fname">T_n/2^{n-1} 最优</span></div>
+          </div>
+          <div class="fcard"><h4>10 积分</h4>
+            <div class="frow">$-\frac{b-a}{12}h^2f''(\eta)$ / $-\frac{b-a}{180}h^4f^{(4)}(\eta)$<span class="fname">复化梯形 / Simpson 余项</span></div>
+            <div class="frow">Gauss 型：n+1 点 ⇒ 2n+1 阶代数精度<span class="fname">代数精度上限</span></div>
+          </div>
+          <div class="fcard"><h4>11 ODE</h4>
+            <div class="frow">$y_{n+1}=y_n+\frac{h}{6}(k_1+2k_2+2k_3+k_4)$<span class="fname">RK4，整体 O(h⁴)</span></div>
+            <div class="frow">显式稳定界：Euler 2，RK4 ≈2.785（z=λh）<span class="fname">显式 RK 不 A-稳定</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 考前锦囊 ================= -->
+      <section id="exam">
+        <div class="sec-head">
+          <div class="eyebrow">EXAM TOOLKIT</div>
+          <h2>考前锦囊</h2>
+          <p>闭卷笔试三大件：十条证明链条（背链条不背逐字）、十个计算标准动作、常见误区清单。</p>
+        </div>
+
+        <h3 style="font-size:17px">十条必背证明链条</h3>
+        <div class="acc">
+          <details><summary><span class="no">01</span>ρ(A) ≤ ‖A‖（任意算子范数）</summary><div class="acc-body">取特征对 $Ax=\lambda x$（$x\ne0$），两边取范数：$|\lambda|\|x\|=\|Ax\|\le\|A\|\|x\|$，约去 $\|x\|$ 即得。关键一步：<b>算子范数的相容性</b>。</div></details>
+          <details><summary><span class="no">02</span>扰动引理：‖A⁻¹ΔA‖&lt;1 ⇒ I+A⁻¹ΔA 可逆</summary><div class="acc-body">反证：若奇异则存在 $x\ne0$ 使 $(I+A^{-1}\Delta A)x=0$，即 $\|x\|=\|A^{-1}\Delta A\,x\|\le\|A^{-1}\Delta A\|\|x\|&lt;\|x\|$，矛盾。逆的界用 Neumann 级数 $\sum(-A^{-1}\Delta A)^k$ 估计：$\le\frac{1}{1-\|A^{-1}\Delta A\|}$。</div></details>
+          <details><summary><span class="no">03</span>右端项扰动界 ‖δx‖/‖x‖ ≤ κ(A)·‖δb‖/‖b‖</summary><div class="acc-body">$Ax=b$ 与 $A\delta x=\delta b$：由 $\delta x=A^{-1}\delta b$ 得 $\|\delta x\|\le\|A^{-1}\|\|\delta b\|$；由 $\|b\|\le\|A\|\|x\|$ 得 $\frac{1}{\|x\|}\le\frac{\|A\|}{\|b\|}$。两式相乘即得。</div></details>
+          <details><summary><span class="no">04</span>系数矩阵扰动界 ‖δx‖/‖x+δx‖ ≤ κ(A)·‖δA‖/‖A‖</summary><div class="acc-body">从 $(A+\delta A)(x+\delta x)=b$ 展开，消去 $Ax=b$ 得 $\delta x=-A^{-1}\delta A(x+\delta x)$，取范数：$\|\delta x\|\le\|A^{-1}\|\|\delta A\|\|x+\delta x\|$，整理即得。</div></details>
+          <details><summary><span class="no">05</span>Newton 法平方收敛</summary><div class="acc-body">设 $x^*$ 为单根，$f(x^*)=0$。对 $\varphi(x)=x-f/f'$ 求导得 $\varphi'(x^*)=0$；或对 $f$ 在 $x_k$ 处 Taylor 展开到二阶：$0=f(x^*)=f(x_k)+f'(x_k)(x^*-x_k)+\frac{f''(\xi)}{2}(x^*-x_k)^2$，除以 $f'(x_k)$ 整理得 $e_{k+1}=\frac{f''(\xi)}{2f'(x_k)}e_k^2$。</div></details>
+          <details><summary><span class="no">06</span>插值余项 Rₙ = f⁽ⁿ⁺¹⁾(ξ)/(n+1)! · ω(x)</summary><div class="acc-body">固定 x（非节点），构造辅助函数 $\varphi(t)=R_n(t)-K\omega(t)$，取 $K=R_n(x)/\omega(x)$ 使 $\varphi$ 在 $x_0,\dots,x_n,x$ 共 n+2 个点为零；反复用 Rolle 定理 n+1 次得 $\varphi^{(n+1)}(\xi)=0$，即 $f^{(n+1)}(\xi)-K(n+1)!=0$。</div></details>
+          <details><summary><span class="no">07</span>差商性质 f[x₀,…,xₖ] = f⁽ᵏ⁾(ξ)/k!</summary><div class="acc-body">Newton 插值首项系数是 $f[x_0,\dots,x_k]$；与 k 次插值多项式的唯一性 + 余项定理对照首项系数即得。</div></details>
+          <details><summary><span class="no">08</span>求积公式代数精度判定</summary><div class="acc-body">依次代入 $f=1,x,x^2,\dots$：对到 $x^m$ 都精确、对 $x^{m+1}$ 不精确 ⇒ 代数精度为 m。</div></details>
+          <details><summary><span class="no">09</span>Newton-Cotes 偶数阶白赚一阶（n 偶 ⇒ 精度 n+1）</summary><div class="acc-body">代入 $f=x^{n+1}$：余项中 $\omega(t)$ 关于区间中点奇对称，积分 $\int\omega\,dt$ 项为零，故对 $x^{n+1}$ 也精确。</div></details>
+          <details><summary><span class="no">10</span>迭代收敛 ⟺ ρ(B)&lt;1</summary><div class="acc-body">误差递推 $e^{(k)}=B^ke^{(0)}$：对任意 $e^{(0)}$ 趋于 0 ⟺ $B^k\to0$ ⟺ $\rho(B)&lt;1$（用 $\lim\|B^k\|^{1/k}=\rho(B)$）。</div></details>
+        </div>
+
+        <h3 style="font-size:17px;margin-top:28px">计算题十个标准动作</h3>
+        <div class="tblwrap">
+          <table class="data">
+            <tr><th>#</th><th>题型</th><th>标准动作</th></tr>
+            <tr><td class="num">1</td><td>求三种范数与 ρ(A)</td><td>‖A‖₁=最大<b>列</b>和；‖A‖∞=最大<b>行</b>和；‖A‖₂=√λmax(AᵀA) <b>别忘开根号</b></td></tr>
+            <tr><td class="num">2</td><td>求 κ∞(A)</td><td>先显式算 A⁻¹，再 ‖A‖∞·‖A⁻¹‖∞</td></tr>
+            <tr><td class="num">3</td><td>LU 分解</td><td>逐列算 u、l，写完乘回去验证</td></tr>
+            <tr><td class="num">4</td><td>Cholesky</td><td>开方只在 l_jj；注意「减去前面所有项」</td></tr>
+            <tr><td class="num">5</td><td>追赶法</td><td>先 β_i 递推，再前进消元、后退回代</td></tr>
+            <tr><td class="num">6</td><td>迭代法</td><td>写清迭代矩阵 B 与分量公式，列表每步数值，标注停机判据</td></tr>
+            <tr><td class="num">7</td><td>Newton / 弦截</td><td>列表写 x_k, f(x_k), f′(x_k), x_{k+1}，标注达到精度所需步数</td></tr>
+            <tr><td class="num">8</td><td>差商表</td><td>每列填满，取<b>对角线</b>作 Newton 系数</td></tr>
+            <tr><td class="num">9</td><td>三次样条</td><td>先写三弯矩方程组（含边界补充方程），再追赶法解 M_i</td></tr>
+            <tr><td class="num">10</td><td>ODE 数值表</td><td>RK4 每步写 k₁k₂k₃k₄；改进 Euler 写预测值/校正值</td></tr>
+          </table>
+        </div>
+
+        <h3 style="font-size:17px;margin-top:28px">常见误区（提前避开）</h3>
+        <div class="tblwrap">
+          <table class="data">
+            <tr><th>误区</th><th>真相</th></tr>
+            <tr><td>「范数随便选一个就行」</td><td>κ₁/κ∞/κ₂ 是三个不同的条件数，题目说哪个就用哪个</td></tr>
+            <tr><td>「矩阵范数必须满足次乘性」</td><td>公理只有三条；次乘性是额外要求，误差分析时必须单独验证</td></tr>
+            <tr><td>「残差小说明解很准」</td><td>只有 A 良态时残差与误差才等价</td></tr>
+            <tr><td>「插值次数越高越准」</td><td>等距高次 ⇒ Runge 现象（见实验 8）</td></tr>
+            <tr><td>「数值微分步长越小越好」</td><td>舍入 ~ε/h 爆炸，存在最优 h*≈ε^(1/(p+1))</td></tr>
+            <tr><td>「Newton 一定平方收敛」</td><td>仅单根 + 初值近；重根退化为线性（比 (m−1)/m）</td></tr>
+            <tr><td>「显式 RK 阶高就 A-稳定」</td><td>任何显式 RK 都不是 A-稳定的（见实验 11）</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= 自测 ================= -->
+      <section id="quiz">
+        <div class="sec-head">
+          <div class="eyebrow">SELF CHECK</div>
+          <h2>概念自测 10 题</h2>
+          <p>覆盖全课程最高频的考点与误区。点击选项立即判分，错题自动给出解析。答题记录会保存在你自己的浏览器里。</p>
+        </div>
+        <div id="quiz-host"></div>
+        <div class="quiz-score" id="quiz-score">已答 0 / 10</div>
+      </section>
+
+      <div class="footer-note">
+        本页是《数值分析》自学资料（11 章讲义 + 总纲 + 速查表 + 图解手册 + 模拟卷）的互动整合层：概念精讲、完整例题与习题详解仍在原 Markdown 讲义中，建议按「学习路线」一节的 8 周节奏配合使用。所有互动演示在本页本地实时计算。
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="app.js"></script>
