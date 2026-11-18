@@ -70,6 +70,7 @@ window.MathJax = {
       <a href="#ch9" id="nav-ch9"><span class="dot"></span>09 函数逼近</a>
       <a href="#ch10" id="nav-ch10"><span class="dot"></span>10 数值积分微分</a>
       <a href="#ch11" id="nav-ch11"><span class="dot"></span>11 常微分方程</a>
+      <a href="#midterm" class="nav-sec">期中冲刺</a>
       <a href="#formulas" class="nav-sec">公式速查</a>
       <a href="#exam" class="nav-sec">考前锦囊</a>
       <a href="#quiz" class="nav-sec">概念自测</a>
@@ -136,6 +137,59 @@ window.MathJax = {
           </div>
           <div id="mindmap"></div>
         </div>
+
+        <h3 style="margin-top:32px">期中主线详解图 <span style="font-size:13px;color:var(--muted);font-weight:400">（线性方程组四大板块：范数 → 病态 → 直接法 → 迭代法）</span></h3>
+        <details class="midmap">
+          <summary>展开 / 收起「期中主线」详解图（可左右滚动查看）</summary>
+          <div class="midmap-scroll">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1660 1196" font-family="Microsoft YaHei, PingFang SC, Segoe UI, sans-serif">
+              <defs><linearGradient id="rootg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#233b6e"></stop><stop offset="1" stop-color="#3b2f68"></stop></linearGradient><filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.45"></feDropShadow></filter></defs>
+              <rect x="0" y="0" width="1660" height="1196" fill="#0a0f1e"></rect>
+              <g filter="url(#soft)"><rect x="735.0" y="552.0" width="190" height="92" rx="14" fill="url(#rootg)" stroke="#4a5b8f" stroke-width="1.8"></rect><text x="830.0" y="584.0" fill="#e2e8f0" font-size="17" font-weight="800" text-anchor="middle">数值分析·期中</text><text x="830.0" y="610.0" fill="#9aa7bd" font-size="13.5" font-weight="600" text-anchor="middle">线性方程组 Ax = b</text><text x="830.0" y="630.0" fill="#9aa7bd" font-size="11.5" text-anchor="middle">怎么解 · 解多快 · 解多准</text></g>
+              <path d="M 925.0 598.0 C 979.5 598.0, 979.5 304.0, 1034.0 304.0" fill="none" stroke="#2dd4bf" stroke-width="2.2" stroke-opacity="0.85"></path>
+              <rect x="1034" y="284.0" width="172" height="40" rx="19" fill="#2dd4bf" fill-opacity="0.16" stroke="#2dd4bf" stroke-width="1.6" filter="url(#soft)"></rect><circle cx="1056" cy="304.0" r="5" fill="#2dd4bf"></circle><text x="1044.0" y="309.0" fill="#2dd4bf" font-size="14" font-weight="700" text-anchor="start">① 范数（工具箱）</text>
+              <path d="M 1206.0 304.0 C 1245.0 304.0, 1245.0 119.5, 1284.0 119.5" fill="none" stroke="#2dd4bf" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="1284" y="66.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="1284" y="66.0" width="4.5" height="107.0" rx="2" fill="#2dd4bf"></rect></g><text x="1302" y="93.0" fill="#2dd4bf" font-size="14.5" font-weight="700">向量范数 ‖x‖</text><text x="1302" y="116.0" fill="#9aa7bd" font-size="12.2">三公理：非负·齐次·三角不等式</text><text x="1302" y="135.0" fill="#9aa7bd" font-size="12.2">1-范数 Σ|xᵢ|｜2-范数 √Σxᵢ²｜∞-范数 max|xᵢ|</text><text x="1302" y="154.0" fill="#9aa7bd" font-size="12.2">有限维空间中任意两种范数等价</text>
+              <path d="M 1206.0 304.0 C 1245.0 304.0, 1245.0 242.5, 1284.0 242.5" fill="none" stroke="#2dd4bf" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="1284" y="189.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="1284" y="189.0" width="4.5" height="107.0" rx="2" fill="#2dd4bf"></rect></g><text x="1302" y="216.0" fill="#2dd4bf" font-size="14.5" font-weight="700">矩阵范数</text><text x="1302" y="239.0" fill="#9aa7bd" font-size="12.2">四公理 + 次乘性 ‖AB‖≤‖A‖‖B‖</text><text x="1302" y="258.0" fill="#9aa7bd" font-size="12.2">反例：(1/n²)Σ|aᵢⱼ| 无次乘性</text><text x="1302" y="277.0" fill="#9aa7bd" font-size="12.2">F-范数：全部元素平方和开方</text>
+              <path d="M 1206.0 304.0 C 1245.0 304.0, 1245.0 365.5, 1284.0 365.5" fill="none" stroke="#2dd4bf" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="1284" y="312.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="1284" y="312.0" width="4.5" height="107.0" rx="2" fill="#2dd4bf"></rect></g><text x="1302" y="339.0" fill="#2dd4bf" font-size="14.5" font-weight="700">算子范数（三个必背）</text><text x="1302" y="362.0" fill="#9aa7bd" font-size="12.2">‖A‖₁ = 最大绝对列和</text><text x="1302" y="381.0" fill="#9aa7bd" font-size="12.2">‖A‖∞ = 最大绝对行和</text><text x="1302" y="400.0" fill="#9aa7bd" font-size="12.2">‖A‖₂ = √λmax(AᵀA) 谱范数</text>
+              <path d="M 1206.0 304.0 C 1245.0 304.0, 1245.0 488.5, 1284.0 488.5" fill="none" stroke="#2dd4bf" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="1284" y="435.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="1284" y="435.0" width="4.5" height="107.0" rx="2" fill="#2dd4bf"></rect></g><text x="1302" y="462.0" fill="#2dd4bf" font-size="14.5" font-weight="700">谱半径</text><text x="1302" y="485.0" fill="#9aa7bd" font-size="12.2">ρ(A) = max|λᵢ|（复特征值取模）</text><text x="1302" y="504.0" fill="#9aa7bd" font-size="12.2">ρ(A) ≤ ‖A‖（任意算子范数）</text><text x="1302" y="523.0" fill="#9aa7bd" font-size="12.2">A 对称 ⇒ ‖A‖₂ = ρ(A)</text>
+              <path d="M 925.0 598.0 C 979.5 598.0, 979.5 764.5, 1034.0 764.5" fill="none" stroke="#fbbf24" stroke-width="2.2" stroke-opacity="0.85"></path>
+              <rect x="1034" y="744.5" width="172" height="40" rx="19" fill="#fbbf24" fill-opacity="0.16" stroke="#fbbf24" stroke-width="1.6" filter="url(#soft)"></rect><circle cx="1056" cy="764.5" r="5" fill="#fbbf24"></circle><text x="1044.0" y="769.5" fill="#fbbf24" font-size="14" font-weight="700" text-anchor="start">② 病态与条件数</text>
+              <path d="M 1206.0 764.5 C 1245.0 764.5, 1245.0 641.5, 1284.0 641.5" fill="none" stroke="#fbbf24" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="1284" y="588.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="1284" y="588.0" width="4.5" height="107.0" rx="2" fill="#fbbf24"></rect></g><text x="1302" y="615.0" fill="#fbbf24" font-size="14.5" font-weight="700">病态方程组</text><text x="1302" y="638.0" fill="#9aa7bd" font-size="12.2">小扰动 → 解剧变（例：b 差 10⁻⁴）</text><text x="1302" y="657.0" fill="#9aa7bd" font-size="12.2">Hilbert 矩阵：κ 随阶数爆炸</text><text x="1302" y="676.0" fill="#9aa7bd" font-size="12.2">病态是问题性质，与算法无关</text>
+              <path d="M 1206.0 764.5 C 1245.0 764.5, 1245.0 755.0, 1284.0 755.0" fill="none" stroke="#fbbf24" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="1284" y="711.0" width="330" height="88.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="1284" y="711.0" width="4.5" height="88.0" rx="2" fill="#fbbf24"></rect></g><text x="1302" y="738.0" fill="#fbbf24" font-size="14.5" font-weight="700">扰动引理</text><text x="1302" y="761.0" fill="#9aa7bd" font-size="12.2">‖E‖&lt;1 ⇒ I±E 可逆</text><text x="1302" y="780.0" fill="#9aa7bd" font-size="12.2">‖(I±E)⁻¹‖ ≤ 1/(1−‖E‖)</text>
+              <path d="M 1206.0 764.5 C 1245.0 764.5, 1245.0 878.0, 1284.0 878.0" fill="none" stroke="#fbbf24" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="1284" y="815.0" width="330" height="126.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="1284" y="815.0" width="4.5" height="126.0" rx="2" fill="#fbbf24"></rect></g><text x="1302" y="842.0" fill="#fbbf24" font-size="14.5" font-weight="700">条件数 κ(A)</text><text x="1302" y="865.0" fill="#9aa7bd" font-size="12.2">κ(A) = ‖A‖·‖A⁻¹‖ ≥ 1，越大越病态</text><text x="1302" y="884.0" fill="#9aa7bd" font-size="12.2">b 扰动：‖δx‖/‖x‖ ≤ κ·‖δb‖/‖b‖</text><text x="1302" y="903.0" fill="#9aa7bd" font-size="12.2">A 扰动：≤ κε/(1−κε)（κε&lt;1）</text><text x="1302" y="922.0" fill="#9aa7bd" font-size="12.2">对称阵 κ₂ = max|λ|/min|λ|</text>
+              <path d="M 735.0 598.0 C 680.5 598.0, 680.5 337.0, 626.0 337.0" fill="none" stroke="#60a5fa" stroke-width="2.2" stroke-opacity="0.85"></path>
+              <rect x="454" y="317.0" width="172" height="40" rx="19" fill="#60a5fa" fill-opacity="0.16" stroke="#60a5fa" stroke-width="1.6" filter="url(#soft)"></rect><circle cx="604" cy="337.0" r="5" fill="#60a5fa"></circle><text x="444.0" y="342.0" fill="#60a5fa" font-size="14" font-weight="700" text-anchor="end">③ 直接法（有限步得精确解）</text>
+              <path d="M 454.0 337.0 C 415.0 337.0, 415.0 110.0, 376.0 110.0" fill="none" stroke="#60a5fa" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="66.0" width="330" height="88.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="66.0" width="4.5" height="88.0" rx="2" fill="#60a5fa"></rect></g><text x="64" y="93.0" fill="#60a5fa" font-size="14.5" font-weight="700">高斯消去法</text><text x="64" y="116.0" fill="#9aa7bd" font-size="12.2">消去（左乘初等阵）+ 回代</text><text x="64" y="135.0" fill="#9aa7bd" font-size="12.2">运算量 O(n³)，完胜 Cramer 的 n!</text>
+              <path d="M 454.0 337.0 C 415.0 337.0, 415.0 214.0, 376.0 214.0" fill="none" stroke="#60a5fa" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="170.0" width="330" height="88.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="170.0" width="4.5" height="88.0" rx="2" fill="#60a5fa"></rect></g><text x="64" y="197.0" fill="#60a5fa" font-size="14.5" font-weight="700">选主元</text><text x="64" y="220.0" fill="#9aa7bd" font-size="12.2">列主元：第 k 列对角下选最大</text><text x="64" y="239.0" fill="#9aa7bd" font-size="12.2">全主元：右下子阵全选，换列要还原 x</text>
+              <path d="M 454.0 337.0 C 415.0 337.0, 415.0 327.5, 376.0 327.5" fill="none" stroke="#60a5fa" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="274.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="274.0" width="4.5" height="107.0" rx="2" fill="#60a5fa"></rect></g><text x="64" y="301.0" fill="#60a5fa" font-size="14.5" font-weight="700">三角分解 A = LU</text><text x="64" y="324.0" fill="#9aa7bd" font-size="12.2">条件：各阶顺序主子式 ≠ 0</text><text x="64" y="343.0" fill="#9aa7bd" font-size="12.2">Doolittle：L 单位下三角｜Crout：U 单位上三角</text><text x="64" y="362.0" fill="#9aa7bd" font-size="12.2">解法：Ly = b 再 Ux = y，det A = ∏uᵢᵢ</text>
+              <path d="M 454.0 337.0 C 415.0 337.0, 415.0 450.5, 376.0 450.5" fill="none" stroke="#60a5fa" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="397.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="397.0" width="4.5" height="107.0" rx="2" fill="#60a5fa"></rect></g><text x="64" y="424.0" fill="#60a5fa" font-size="14.5" font-weight="700">根平方法（Cholesky）</text><text x="64" y="447.0" fill="#9aa7bd" font-size="12.2">A = LLᵀ，仅限对称正定</text><text x="64" y="466.0" fill="#9aa7bd" font-size="12.2">改进：A = LDLᵀ 免开方</text><text x="64" y="485.0" fill="#9aa7bd" font-size="12.2">lⱼⱼ = √(aⱼⱼ − Σlⱼₖ²)</text>
+              <path d="M 454.0 337.0 C 415.0 337.0, 415.0 564.0, 376.0 564.0" fill="none" stroke="#60a5fa" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="520.0" width="330" height="88.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="520.0" width="4.5" height="88.0" rx="2" fill="#60a5fa"></rect></g><text x="64" y="547.0" fill="#60a5fa" font-size="14.5" font-weight="700">追赶法</text><text x="64" y="570.0" fill="#9aa7bd" font-size="12.2">三对角方程组专用，O(n)</text><text x="64" y="589.0" fill="#9aa7bd" font-size="12.2">Crout 分解 → 追(Ly=f) → 赶(Ux=y)</text>
+              <path d="M 735.0 598.0 C 680.5 598.0, 680.5 892.0, 626.0 892.0" fill="none" stroke="#c084fc" stroke-width="2.2" stroke-opacity="0.85"></path>
+              <rect x="454" y="872.0" width="172" height="40" rx="19" fill="#c084fc" fill-opacity="0.16" stroke="#c084fc" stroke-width="1.6" filter="url(#soft)"></rect><circle cx="604" cy="892.0" r="5" fill="#c084fc"></circle><text x="444.0" y="897.0" fill="#c084fc" font-size="14" font-weight="700" text-anchor="end">④ 迭代法（序列逼近）</text>
+              <path d="M 454.0 892.0 C 415.0 892.0, 415.0 698.0, 376.0 698.0" fill="none" stroke="#c084fc" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="654.0" width="330" height="88.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="654.0" width="4.5" height="88.0" rx="2" fill="#c084fc"></rect></g><text x="64" y="681.0" fill="#c084fc" font-size="14.5" font-weight="700">Jacobi 迭代</text><text x="64" y="704.0" fill="#9aa7bd" font-size="12.2">全用旧值：xᵢ ← (bᵢ−Σaᵢⱼxⱼ)/aᵢᵢ</text><text x="64" y="723.0" fill="#9aa7bd" font-size="12.2">Bⱼ = D⁻¹(L+U)</text>
+              <path d="M 454.0 892.0 C 415.0 892.0, 415.0 811.5, 376.0 811.5" fill="none" stroke="#c084fc" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="758.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="758.0" width="4.5" height="107.0" rx="2" fill="#c084fc"></rect></g><text x="64" y="785.0" fill="#c084fc" font-size="14.5" font-weight="700">Gauss-Seidel 迭代</text><text x="64" y="808.0" fill="#9aa7bd" font-size="12.2">即时用新值，一般更快</text><text x="64" y="827.0" fill="#9aa7bd" font-size="12.2">B_GS = (D−L)⁻¹U</text><text x="64" y="846.0" fill="#9aa7bd" font-size="12.2">⚠️ J 收敛 ⇏ GS 收敛</text>
+              <path d="M 454.0 892.0 C 415.0 892.0, 415.0 934.5, 376.0 934.5" fill="none" stroke="#c084fc" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="881.0" width="330" height="107.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="881.0" width="4.5" height="107.0" rx="2" fill="#c084fc"></rect></g><text x="64" y="908.0" fill="#c084fc" font-size="14.5" font-weight="700">SOR 超松弛</text><text x="64" y="931.0" fill="#9aa7bd" font-size="12.2">x⁽ᵏ⁺¹⁾ = (1−ω)x⁽ᵏ⁾ + ω·G-S 修正</text><text x="64" y="950.0" fill="#9aa7bd" font-size="12.2">ω&gt;1 超松弛｜0&lt;ω&lt;1 低松弛｜ω=1 即 G-S</text><text x="64" y="969.0" fill="#9aa7bd" font-size="12.2">B_SOR = (D−ωL)⁻¹[(1−ω)D+ωU]</text>
+              <path d="M 454.0 892.0 C 415.0 892.0, 415.0 1067.0, 376.0 1067.0" fill="none" stroke="#c084fc" stroke-width="1.6" stroke-opacity="0.85"></path>
+              <g filter="url(#soft)"><rect x="46" y="1004.0" width="330" height="126.0" rx="10" fill="#141d36" stroke="#2a3554"></rect><rect x="46" y="1004.0" width="4.5" height="126.0" rx="2" fill="#c084fc"></rect></g><text x="64" y="1031.0" fill="#c084fc" font-size="14.5" font-weight="700">收敛性判据（核心）</text><text x="64" y="1054.0" fill="#9aa7bd" font-size="12.2">充要：ρ(B) &lt; 1 ⇔ 收敛</text><text x="64" y="1073.0" fill="#9aa7bd" font-size="12.2">充分：‖B‖ &lt; 1（先验更快）</text><text x="64" y="1092.0" fill="#9aa7bd" font-size="12.2">严格对角占优 ⇒ J、GS 都收敛</text><text x="64" y="1111.0" fill="#9aa7bd" font-size="12.2">A 对称正定 + 0&lt;ω&lt;2 ⇒ SOR 收敛</text>
+              <text x="830" y="1180" fill="#9aa7bd" font-size="12" text-anchor="middle">学习顺序建议：① 范数（工具）→ ③ 直接法 → ② 病态与条件数 → ④ 迭代法（综合运用）</text>
+            </svg>
+          </div>
+        </details>
       </section>
 
       <!-- ================= 学习路线 ================= -->
@@ -272,7 +326,7 @@ window.MathJax = {
           <div class="ch-num">02</div>
           <div class="ch-title-wrap">
             <h3>范数与线性方程组的性态</h3>
-            <div class="chips"><span class="chip">§1.2 + §1.3</span><span class="chip">难度 ★★★★</span><span class="chip w-max">权重：最高（计算+证明）</span><span class="chip">14h</span></div>
+            <div class="chips"><span class="chip">§1.2 + §1.3</span><span class="chip">难度 ★★★★</span><span class="chip w-max">权重：最高（计算+证明）</span><span class="chip">14h</span><a class="chip w-max" href="#midterm">期中必考</a></div>
           </div>
           <label class="done-toggle"><input type="checkbox" id="done-ch2">本章完成</label>
         </div>
@@ -336,7 +390,7 @@ window.MathJax = {
           <div class="ch-num">03</div>
           <div class="ch-title-wrap">
             <h3>线性方程组直接解法</h3>
-            <div class="chips"><span class="chip">教材第 2 章</span><span class="chip">难度 ★★</span><span class="chip w-high">权重：高（大题必出）</span><span class="chip">12h</span></div>
+            <div class="chips"><span class="chip">教材第 2 章</span><span class="chip">难度 ★★</span><span class="chip w-high">权重：高（大题必出）</span><span class="chip">12h</span><a class="chip w-max" href="#midterm">期中必考</a></div>
           </div>
           <label class="done-toggle"><input type="checkbox" id="done-ch3">本章完成</label>
         </div>
@@ -388,7 +442,7 @@ window.MathJax = {
           <div class="ch-num">04</div>
           <div class="ch-title-wrap">
             <h3>解线性方程组的迭代法</h3>
-            <div class="chips"><span class="chip">教材第 2 章后半</span><span class="chip">难度 ★★★</span><span class="chip w-high">权重：高（迭代表格几乎必考）</span><span class="chip">12h</span></div>
+            <div class="chips"><span class="chip">教材第 2 章后半</span><span class="chip">难度 ★★★</span><span class="chip w-high">权重：高（迭代表格几乎必考）</span><span class="chip">12h</span><a class="chip w-max" href="#midterm">期中必考</a></div>
           </div>
           <label class="done-toggle"><input type="checkbox" id="done-ch4">本章完成</label>
         </div>
@@ -822,6 +876,96 @@ window.MathJax = {
             <li>改进 Euler 的校正只用一次就是 2 阶精度，不必迭代到收敛。</li>
             <li>RK4 每步要算 4 次 f，比较效率要按「每单位 f 计算量的精度」比。</li>
           </ul>
+        </div>
+      </section>
+
+      <!-- ================= 期中冲刺 ================= -->
+      <section id="midterm">
+        <div class="sec-head">
+          <div class="eyebrow">MIDTERM SPRINT</div>
+          <h2>期中冲刺：考点清单 · 易错红牌 · 速查 · 自测</h2>
+          <p>期中范围锁定「线性方程组」主线：范数 → 病态与条件数 → 直接法 → 迭代法（对应 02–04 章）。下面是按出现概率排序的考点表、考前必读的十条易错点、一页公式速查，以及 5 道带详解的模拟题。先遮住答案限时 60 分钟做完，再逐题对照。</p>
+        </div>
+
+        <h3 id="mt-points" style="font-size:17px;margin-top:8px">5.1 高频考点清单 <span style="font-size:13px;color:var(--muted);font-weight:400">（按出现概率排序，可对照打勾）</span></h3>
+        <div class="tblwrap">
+          <table class="data">
+            <tr><th>#</th><th>题型</th><th>对应章节</th><th>要求</th></tr>
+            <tr><td class="num">1</td><td>计算 1 / 2 / ∞ 范数（向量 + 矩阵）</td><td><a href="#ch2">02 章</a></td><td>秒算 $\|\cdot\|_1$、$\|\cdot\|_\infty$；会求 $\|A\|_2$（特征值法）</td></tr>
+            <tr><td class="num">2</td><td>写出 Jacobi / G-S / SOR 迭代格式</td><td><a href="#ch4">04 章</a></td><td>分量式 + 矩阵式（含迭代矩阵）</td></tr>
+            <tr><td class="num">3</td><td>判断迭代法收敛性</td><td><a href="#ch4">04 章</a></td><td>三条路径：范数（充分）、谱半径（充要）、特殊矩阵（对角占优 / 对称正定）</td></tr>
+            <tr><td class="num">4</td><td>Doolittle 分解解方程组</td><td><a href="#ch3">03 章</a></td><td>公式 + 三步流程 + 用 $\det U$ 自检</td></tr>
+            <tr><td class="num">5</td><td>根平方法（Cholesky）解方程组</td><td><a href="#ch3">03 章</a></td><td>先验证对称正定，再 $LL^T$</td></tr>
+            <tr><td class="num">6</td><td>条件数与病态、误差界估计</td><td><a href="#ch2">02 章</a></td><td>$\kappa$ 的定义、两个扰动不等式</td></tr>
+            <tr><td class="num">7</td><td>高斯消去 / 列主元步骤</td><td><a href="#ch3">03 章</a></td><td>手算 3×3 消元 + 回代</td></tr>
+            <tr><td class="num">8</td><td>概念辨析（选择 / 判断）</td><td>全课程</td><td>直接法 vs 迭代法、充分 vs 充要、三种分解辨析</td></tr>
+          </table>
+        </div>
+
+        <h3 style="font-size:17px;margin-top:28px">5.2 易错点红牌警告 <span style="font-size:13px;color:var(--muted);font-weight:400">（考前必读）</span></h3>
+        <div class="pitfalls"><b>十大易错点</b>
+          <ul>
+            <li>$\|A\|_2$ 不是行和也不是列和，必须 $\sqrt{\lambda_{\max}(A^TA)}$；只有<b>对称阵</b>才等于 $\rho(A)$。</li>
+            <li>谱半径是特征值<b>模</b>的最大值（特征值可能是复数）。</li>
+            <li>$\rho(B)&lt;1$ 是充要条件；$\|B\|&lt;1$ 只是充分条件 ——「范数 ≥ 1」≠「发散」。</li>
+            <li>Jacobi 收敛<b>推不出</b> G-S 收敛（反之亦然），必须分别验证。</li>
+            <li>LU（Doolittle）分解存在的条件是<b>各阶顺序主子式 ≠ 0</b>，比 $\det A\ne 0$ 更强。</li>
+            <li>全主元法换<b>列</b>后必须记录顺序、解完换回 $x_i$；列主元只换行不用换回。</li>
+            <li>根平方法只适用于<b>对称正定</b>矩阵；对角元 $l_{jj}&gt;0$（开方取正）。</li>
+            <li>SOR 收敛要求 $A$ 对称正定<b>且</b> $0&lt;\omega&lt;2$；$\omega=1$ 时才退化为 G-S。</li>
+            <li>条件数与所选范数有关（$\kappa_1,\kappa_\infty,\kappa_2$ 数值不同）；且 $\kappa\ge 1$。</li>
+            <li>病态是方程组自身的性质，与算法无关；小残差 $\not\Rightarrow$ 小误差。</li>
+          </ul>
+        </div>
+
+        <h3 style="font-size:17px;margin-top:28px">5.3 期中公式速查 <span style="font-size:13px;color:var(--muted);font-weight:400">（打印背诵）</span></h3>
+        <div class="tblwrap">
+          <table class="data">
+            <tr><th style="width:120px">主题</th><th>公式</th></tr>
+            <tr><td>向量范数</td><td>$\|x\|_1=\sum|x_i|$；$\|x\|_2=\sqrt{\sum x_i^2}$；$\|x\|_\infty=\max|x_i|$</td></tr>
+            <tr><td>矩阵范数</td><td>$\|A\|_1$ 最大列和；$\|A\|_\infty$ 最大行和；$\|A\|_2=\sqrt{\lambda_{\max}(A^TA)}$；$\|A\|_F=\sqrt{\sum\sum a_{ij}^2}$</td></tr>
+            <tr><td>谱半径</td><td>$\rho(A)=\max_i|\lambda_i|\le\|A\|$；$A$ 对称 ⇒ $\|A\|_2=\rho(A)$</td></tr>
+            <tr><td>条件数</td><td>$\kappa(A)=\|A\|\,\|A^{-1}\|$；对称阵 $\kappa_2=\max|\lambda_i|/\min|\lambda_i|$</td></tr>
+            <tr><td>b 扰动界</td><td>$\dfrac{\|\delta x\|}{\|x\|}\le\kappa(A)\dfrac{\|\delta b\|}{\|b\|}$</td></tr>
+            <tr><td>A 扰动界</td><td>$\dfrac{\|\delta x\|}{\|x\|}\le\dfrac{\kappa\varepsilon}{1-\kappa\varepsilon}$，$\varepsilon=\dfrac{\|\delta A\|}{\|A\|}$，需 $\kappa\varepsilon&lt;1$</td></tr>
+            <tr><td>扰动引理</td><td>$\|E\|&lt;1\Rightarrow I\pm E$ 可逆，$\|(I\pm E)^{-1}\|\le 1/(1-\|E\|)$</td></tr>
+            <tr><td>运算量</td><td>Gauss 消去 $O(n^3)$（消元乘法 $n(n^2-1)/3$）；Cramer $(n+1)(n-1)n!+n$</td></tr>
+            <tr><td>Doolittle</td><td>$A=LU$（L 单位下三角）；条件：各阶顺序主子式 ≠ 0；$\det A=\prod u_{ii}$</td></tr>
+            <tr><td>Cholesky</td><td>$A=LL^T$（对称正定）；$l_{jj}=\sqrt{a_{jj}-\sum_{k&lt;j}l_{jk}^2}$，$l_{ij}=\dfrac{a_{ij}-\sum_{k&lt;j}l_{ik}l_{jk}}{l_{jj}}$</td></tr>
+            <tr><td>迭代矩阵</td><td>$B_J=D^{-1}(L+U)$；$B_{GS}=(D-L)^{-1}U$；$B_{SOR}=(D-\omega L)^{-1}[(1-\omega)D+\omega U]$</td></tr>
+            <tr><td>收敛判据</td><td>充要：$\rho(B)&lt;1$；充分：$\|B\|&lt;1$；严格对角占优 ⇒ J、GS 收敛；对称正定 + $0&lt;\omega&lt;2$ ⇒ SOR 收敛</td></tr>
+            <tr><td>误差估计</td><td>事后：$\|x^{(k)}-x^*\|\le\dfrac{q}{1-q}\|x^{(k)}-x^{(k-1)}\|$（$q=\|B\|&lt;1$）</td></tr>
+          </table>
+        </div>
+
+        <h3 style="font-size:17px;margin-top:28px">5.4 期中模拟自测 <span style="font-size:13px;color:var(--muted);font-weight:400">（先遮住答案，限时 60 分钟）</span></h3>
+        <div class="acc">
+          <details><summary><span class="no">01</span>（15 分）求 $x=(2,-1,2)^T$ 的三种范数</summary><div class="acc-body">
+            $\|x\|_1=2+1+2=5$；$\|x\|_2=\sqrt{4+1+4}=3$；$\|x\|_\infty=2$。
+          </div></details>
+          <details><summary><span class="no">02</span>（20 分）$A=\begin{pmatrix}2&amp;1\\1&amp;3\end{pmatrix}$，求 $\|A\|_1,\|A\|_\infty,\|A\|_2$ 和 $\rho(A)$</summary><div class="acc-body">
+            $\|A\|_1=\max\{3,4\}=4$；$\|A\|_\infty=\max\{3,4\}=4$。<br>
+            $A$ 对称 ⇒ $\|A\|_2=\rho(A)$。特征值：$\lambda^2-5\lambda+5=0\Rightarrow \lambda=\dfrac{5\pm\sqrt5}{2}$，故 $\|A\|_2=\rho(A)=\dfrac{5+\sqrt5}{2}\approx 3.618$。<br>
+            <b>点评：</b>对称阵的 2-范数直接算特征值即可，不必构造 $A^TA$。
+          </div></details>
+          <details><summary><span class="no">03</span>（25 分）对 $\begin{cases}x_1+2x_2-2x_3=1\\ x_1+x_2+x_3=3\\ 2x_1+2x_2+x_3=5\end{cases}$ 写出 Jacobi 与 G-S 格式，并分别判断收敛性</summary><div class="acc-body">
+            <b>Jacobi：</b>$x_1^{(k+1)}=1-2x_2^{(k)}+2x_3^{(k)}$，$x_2^{(k+1)}=3-x_1^{(k)}-x_3^{(k)}$，$x_3^{(k+1)}=5-2x_1^{(k)}-2x_2^{(k)}$。<br>
+            $B_J=I-A$，特征多项式为 $-\lambda^3$，$\rho(B_J)=0&lt;1$ ⇒ <b>收敛</b>（3 步收敛到 $x^*=(1,1,1)^T$）。<br>
+            <b>G-S：</b>$x_1^{(k+1)}=1-2x_2^{(k)}+2x_3^{(k)}$，$x_2^{(k+1)}=3-x_1^{(k+1)}-x_3^{(k)}$，$x_3^{(k+1)}=5-2x_1^{(k+1)}-2x_2^{(k+1)}$。<br>
+            $B_{GS}=(D-L)^{-1}U=\begin{pmatrix}0&amp;-2&amp;2\\0&amp;2&amp;-3\\0&amp;0&amp;1\end{pmatrix}$，特征值 $0,2,1$，$\rho(B_{GS})=2&gt;1$ ⇒ <b>发散</b>。<br>
+            <b>点评：</b>「Jacobi 收敛但 G-S 发散」必须成为条件反射。
+          </div></details>
+          <details><summary><span class="no">04</span>（25 分）用 Doolittle 分解解 $Ax=b$：$A=\begin{pmatrix}2&amp;1&amp;1\\4&amp;3&amp;3\\6&amp;7&amp;9\end{pmatrix}$，$b=(5,11,25)^T$</summary><div class="acc-body">
+            <b>分解：</b>$L=\begin{pmatrix}1&amp;0&amp;0\\2&amp;1&amp;0\\3&amp;4&amp;1\end{pmatrix}$，$U=\begin{pmatrix}2&amp;1&amp;1\\0&amp;1&amp;1\\0&amp;0&amp;2\end{pmatrix}$。<br>
+            <b>解 $Ly=b$：</b>$y_1=5$，$y_2=11-2\times5=1$，$y_3=25-3\times5-4\times1=6$。<br>
+            <b>解 $Ux=y$：</b>$x_3=6/2=3$，$x_2=1-3=-2$，$x_1=(5-(-2)-3)/2=2$。<br>
+            $$x=(2,\,-2,\,3)^T$$
+            <b>自检：</b>代回三行全成立；且 $\det A=\det U=4$，与按定义展开一致。
+          </div></details>
+          <details><summary><span class="no">05</span>（15 分）设 $\kappa(A)=10^4$，$\|\delta b\|/\|b\|=10^{-4}$，估计解的相对误差上界并说明性态</summary><div class="acc-body">
+            $$\frac{\|\delta x\|}{\|x\|}\le\kappa(A)\frac{\|\delta b\|}{\|b\|}=10^4\times10^{-4}=1$$
+            即解的相对误差可能高达 <b>100%</b> —— 数据万分之一的扰动可能让解完全失真。$\kappa(A)=10^4\gg1$，方程组<b>病态</b>。
+          </div></details>
         </div>
       </section>
 

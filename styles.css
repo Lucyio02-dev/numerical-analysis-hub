@@ -194,6 +194,22 @@ main section { margin-block: 40px; scroll-margin-top: 16px; }
 .chip.w-high { background: rgba(42,120,214,.12); color: var(--s1); border-color: transparent; }
 .chip.w-mid { background: var(--surface-2); }
 .done-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); cursor: pointer; user-select: none; }
+a.chip { text-decoration: none; transition: color .15s, border-color .15s; }
+a.chip:hover { border-color: var(--accent); color: var(--accent); }
+
+/* 期中主线详解图（折叠） */
+.midmap { margin-top: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.midmap summary {
+  cursor: pointer; padding: 11px 16px; font-size: 13.5px; font-weight: 600;
+  color: var(--accent); list-style: none; display: flex; gap: 8px; align-items: center;
+}
+.midmap summary::-webkit-details-marker { display: none; }
+.midmap summary::before { content: "▸"; font-size: 12px; }
+.midmap[open] summary::before { content: "▾"; }
+.midmap[open] summary { border-bottom: 1px solid var(--line); }
+.midmap-scroll { overflow-x: auto; padding: 12px; }
+.midmap-scroll svg { width: 1100px; max-width: none; height: auto; display: block; border-radius: 10px; }
+@media (max-width: 1180px) { .midmap-scroll svg { width: 980px; } }
 .done-toggle input { accent-color: var(--good); width: 16px; height: 16px; }
 
 .why { margin: 16px 0 0; color: var(--ink); max-width: 76ch; }
